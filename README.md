@@ -1,2 +1,2 @@
 
-### This is users service for JuJa community
+### This is teams service for JuJa community
