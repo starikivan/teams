@@ -4,7 +4,7 @@ public enum ApiErrorStatus {
     TEAMS_EXCEPTION(
             "0",
             "Oops something went wrong :(",
-            "The exception is general in gamification"
+            "The exception is general in team microservice"
     ),
 
     OTHER_EXCEPTION(
