@@ -1,7 +1,8 @@
 package juja.microservices.teams.controller;
 
 import juja.microservices.teams.entity.TeamRequest;
-import juja.microservices.teams.service.TeamsService;
+import juja.microservices.teams.entity.UserUuidRequest;
+import juja.microservices.teams.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,12 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 
 @RestController
-public class TeamsController {
+public class TeamController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
-    private TeamsService teamsService;
+    private TeamService teamService;
 
     @PostMapping(value = "/teams", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
@@ -25,7 +26,7 @@ public class TeamsController {
     }
 
     @PutMapping(value = "/teams/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> deactivateTeam(@PathVariable String id) {
+    public ResponseEntity<?> deactivateTeam(@Valid @RequestBody UserUuidRequest request, @PathVariable String id) {
         //TODO Should be implemented feature TMF-F2
         return null;
     }
