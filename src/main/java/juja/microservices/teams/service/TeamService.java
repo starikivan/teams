@@ -1,4 +1,4 @@
 package juja.microservices.teams.service;
 
-public class TeamsService {
+public class TeamService {
 }
