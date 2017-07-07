@@ -28,7 +28,7 @@ public class TeamTest {
         final Date startDate = new Date();
         Date dismissDate = getDatePlusOneMonth(startDate);
 
-        Team team = new Team(creator, uuidOne, uuidTwo, uuidThree, uuidFour, startDate);
+        Team team = new Team(creator, uuidOne, uuidTwo, uuidThree, uuidFour);
         //Then
         assertEquals(null, team.getId());
         assertEquals(creator, team.getFrom());
@@ -36,8 +36,8 @@ public class TeamTest {
         assertEquals(uuidTwo, team.getUuidTwo());
         assertEquals(uuidThree, team.getUuidThree());
         assertEquals(uuidFour, team.getUuidFour());
-        assertEquals(startDate, team.getStartDate());
-        assertEquals(dismissDate, team.getDismissDate());
+        assertEquals(startDate.toString(), team.getStartDate().toString());
+        assertEquals(dismissDate.toString(), team.getDismissDate().toString());
     }
 
     private Date getDatePlusOneMonth(Date startDate) {
