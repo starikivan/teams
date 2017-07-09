@@ -11,5 +11,6 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 before_script:
+  - chmod +x gradlew
   - sleep 15
   - mongo teams --eval 'db.createUser({user:"root", pwd:"root", roles:[{role:"dbAdmin", db:"teams"}]});'
