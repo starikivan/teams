@@ -16,7 +16,7 @@ group = 'ua.com.juja'
 version = '1.0-SNAPSHOT'
 
 jar {
-    baseName = "teams-service"
+    baseName = "teams"
     version = "0.1.0"
 }
 
