@@ -10,6 +10,12 @@ cache:
     - $HOME/.m2
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+before_install:
+  - chmod +x gradlew
 before_script:
   - sleep 15
-  - mongo teams --eval 'db.createUser({user:"root", pwd:"root", roles:[{role:"dbAdmin", db:"users"}]});'
+  - mongo teams --eval 'db.createUser({user:"root", pwd:"root", roles:[{role:"dbAdmin", db:"teams"}]});'
+script:
+  - ./gradlew test
+  - ./gradlew test --tests "juja.microservices.integration.*"
+  - ./gradlew test --tests "juja.microservices.acceptance.*"
