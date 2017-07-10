@@ -1,8 +1,6 @@
 package juja.microservices.teams.dao;
 
 import juja.microservices.teams.entity.Team;
-import juja.microservices.teams.exceptions.TeamNotKeeperException;
-import juja.microservices.teams.exceptions.TeamUserExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,6 +10,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -35,27 +36,25 @@ public class TeamsRepositoryTest {
     final String uuidTwo = "f827811f-51e8-4fc4-a56d-aebcd2193bc2";
     final String uuidThree = "f827811f-51e8-4fc4-a56d-aebcd2193bc1";
     final String uuidFour = "f827811f-51e8-4fc4-a56d-aebcd2193bc0";
+    final Team team = new Team(keeper, uuidOne, uuidTwo, uuidThree, uuidFour);
 
     @Test
     public void save(){
         //When
         doNothing().when(mongoTemplate).save(any(Team.class));
         //Then
-        assertEquals(null, teamRepository.save(new Team(keeper, uuidOne, uuidTwo, uuidThree, uuidFour)));
+        assertEquals(null, teamRepository.add(team));
     }
 
-    @Test(expected = TeamNotKeeperException.class)
-    public void addTeamWhenCreatorIsNotKeeper(){
+    @Test
+    public void isUserInOtherTeam(){
         //Given
+        List<Team> teamList = new ArrayList<Team>();
+        teamList.add(team);
         //When
+        when(mongoTemplate.find(anyObject(), eq(Team.class))).thenReturn(teamList);
         //Then
-    }
+        assertTrue(teamRepository.isUserInOtherTeam(uuidOne));
 
-    @Test(expected = TeamUserExistsException.class)
-    public void addTeamWhenUserExistsInOtherTeam(){
-        //Given
-        //When
-        //Then
     }
-
 }

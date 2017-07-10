@@ -1,0 +1,14 @@
+{
+  "team": [
+    {
+      "id":"qwert",
+      "from":"123qwe",
+      "uuidOne":"asdqwe1",
+      "uuidTwo":"asdqwe2",
+      "uuidThree":"asdqwe3",
+      "uuidFour":"asdqwe4",
+      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "dismissDate":{ "$date" : "2017-05-01T00:00:00.000Z"}
+    }
+  ]
+}
