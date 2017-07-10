@@ -16,6 +16,9 @@ import static org.junit.Assert.*;
  */
 
 public class TeamTest {
+    //TODO replace with real tests
+    @Test
+    public void test() {
 
     @Test
     public void newTest() {
@@ -46,5 +49,4 @@ public class TeamTest {
         cal.add(Calendar.MONTH, 1);
         return Date.from(cal.toInstant());
     }
-
 }
