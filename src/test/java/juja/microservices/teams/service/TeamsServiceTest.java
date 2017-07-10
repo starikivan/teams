@@ -2,6 +2,7 @@ package juja.microservices.teams.service;
 
 import juja.microservices.teams.dao.TeamRepository;
 import juja.microservices.teams.entity.Team;
+import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.exceptions.TeamUserExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,15 +38,15 @@ public class TeamsServiceTest {
     final String uuidTwo = "f827811f-51e8-4fc4-a56d-aebcd2193bc2";
     final String uuidThree = "f827811f-51e8-4fc4-a56d-aebcd2193bc1";
     final String uuidFour = "f827811f-51e8-4fc4-a56d-aebcd2193bc0";
-    final Team team = new Team(creator, uuidOne, uuidTwo, uuidThree, uuidFour);
+    final TeamRequest teamRequest = new TeamRequest(creator, uuidOne, uuidTwo, uuidThree, uuidFour);
 
     @Test
     public void addTeam(){
         //Given
         String expected = "SomeId";
-        when(teamRepository.add(team)).thenReturn("SomeId");
+        when(teamRepository.add(any(Team.class))).thenReturn("SomeId");
         //When
-        String result = teamService.addTeam(team);
+        String result = teamService.addTeam(teamRequest);
         //Then
         assertEquals(expected, result);
     }
@@ -54,7 +55,7 @@ public class TeamsServiceTest {
     public void addTeamWhenUserExistsInOtherTeam(){
         //When
         when(teamRepository.isUserInOtherTeam(anyString())).thenReturn(true);
-        teamService.addTeam(team);
+        teamService.addTeam(teamRequest);
     }
 
 }

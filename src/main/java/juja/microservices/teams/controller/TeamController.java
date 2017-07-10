@@ -5,13 +5,17 @@ import juja.microservices.teams.entity.UserUuidRequest;
 import juja.microservices.teams.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
+@RequestMapping(value = "/v1")
 public class TeamController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -21,8 +25,12 @@ public class TeamController {
 
     @PostMapping(value = "/teams", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
-        //TODO Should be implemented feature TMF-F1
-        return null;
+        logger.debug("Received add team request. Requested TeamRequest: {}", request);
+        String id = teamService.addTeam(request);
+        List<String> ids = Collections.singletonList(id);
+        logger.info("New team added. Id: {}", ids);
+        logger.debug("Request add team returned {}", ids.toString());
+        return ResponseEntity.ok(ids);
     }
 
     @PutMapping(value = "/teams/{id}", consumes = "application/json", produces = "application/json")

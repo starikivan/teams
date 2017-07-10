@@ -55,7 +55,7 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TeamUserExistsException.class)
     public ResponseEntity<ApiErrorMessage> handleKeepersException(TeamUserExistsException ex) {
         ApiErrorMessage message =
-                ApiErrorMessage.builder(ApiErrorStatus.TEAM_NOT_KEEPER_EXCEPTION)
+                ApiErrorMessage.builder(ApiErrorStatus.TEAM_USER_EXISTS_EXCEPTION)
                         .httpStatus(HttpStatus.BAD_REQUEST.value())
                         .exceptionMessage(ex.getMessage())
                         .build();
