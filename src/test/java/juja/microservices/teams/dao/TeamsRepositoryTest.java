@@ -1,6 +1,8 @@
 package juja.microservices.teams.dao;
 
 import juja.microservices.teams.entity.Team;
+import juja.microservices.teams.exceptions.TeamNotKeeperException;
+import juja.microservices.teams.exceptions.TeamUserExistsException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,14 +44,18 @@ public class TeamsRepositoryTest {
         assertEquals(null, teamRepository.save(new Team(keeper, uuidOne, uuidTwo, uuidThree, uuidFour)));
     }
 
-    @Test
+    @Test(expected = TeamNotKeeperException.class)
     public void addTeamWhenCreatorIsNotKeeper(){
-
+        //Given
+        //When
+        //Then
     }
 
-    @Test
+    @Test(expected = TeamUserExistsException.class)
     public void addTeamWhenUserExistsInOtherTeam(){
-
+        //Given
+        //When
+        //Then
     }
 
 }
