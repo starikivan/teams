@@ -23,7 +23,6 @@ public class TeamRequestTest {
 
         TeamRequest team = new TeamRequest(creator, uuidOne, uuidTwo, uuidThree, uuidFour);
         //Then
-        assertEquals(null, team.getId());
         assertEquals(creator, team.getFrom());
         assertEquals(uuidOne, team.getUuidOne());
         assertEquals(uuidTwo, team.getUuidTwo());
