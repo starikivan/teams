@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * @author Andrii.Sidun
@@ -13,13 +13,16 @@ import org.springframework.data.annotation.Id;
 @Getter
 @ToString
 public class TeamRequest {
-
-    @Id
-    private String id;
+    
+    @NotEmpty
     private String from;
+    @NotEmpty
     private String uuidOne;
+    @NotEmpty
     private String uuidTwo;
+    @NotEmpty
     private String uuidThree;
+    @NotEmpty
     private String uuidFour;
 
     @JsonCreator
