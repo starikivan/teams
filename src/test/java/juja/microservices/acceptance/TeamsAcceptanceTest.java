@@ -38,22 +38,4 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest{
         String result = actualResponse.asString();
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isNotEqualTo(jsonContentControlResponse);
     }
-
-    @Test
-    @UsingDataSet(locations = "/datasets/oneTeamInDBExists.json", loadStrategy = LoadStrategyEnum.DELETE_ALL)
-    public void addTeamWhenUserExists() throws IOException {
-
-        //Given
-        String jsonContentRequest = convertToString(resource("acceptance/request/addTeam.json"));
-        String jsonContentControlResponse = convertToString(
-                resource("acceptance/response/responseAddExistedUserException.json"));
-
-        //When
-        Response actualResponse = getRealResponse("/" + restApiVersion + "/teams", jsonContentRequest, HttpMethod.POST);
-
-        //Then
-        String result = actualResponse.asString();
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentControlResponse);
-    }
-
 }
