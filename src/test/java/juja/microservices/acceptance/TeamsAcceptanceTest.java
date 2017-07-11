@@ -40,7 +40,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest{
     }
 
     @Test
-    @UsingDataSet(locations = "/datasets/oneTeamInDBExists.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/oneTeamInDBExists.json", loadStrategy = LoadStrategyEnum.DELETE_ALL)
     public void addTeamWhenUserExists() throws IOException {
 
         //Given
