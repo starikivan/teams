@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -22,10 +23,17 @@ public class TeamRepository {
     }
 
     public boolean isUserInOtherTeam(String uuid){
-        List<Team> result = mongoTemplate.find(new Query(
+        Date currentData = new Date();
+        boolean result = false;
+        List<Team> teams = mongoTemplate.find(new Query(
                 new Criteria().orOperator(
                         Criteria.where("uuidOne").is(uuid), Criteria.where("uuidTwo").is(uuid),
                         Criteria.where("uuidThree").is(uuid), Criteria.where("uuidFour").is(uuid))), Team.class);
-        return !result.isEmpty();
+        for (Team team: teams) {
+            if (team.getDismissDate().after(currentData)) {
+                return true;
+            }
+        }
+        return result;
     }
 }
