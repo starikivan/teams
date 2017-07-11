@@ -22,8 +22,8 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest{
     @Value( "${rest.api.version}" )
     private String restApiVersion;
 
-    @UsingDataSet(locations = "/datasets/oneTeamInDB.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
+    @UsingDataSet(locations = "/datasets/oneTeamInDB.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void addTeam() throws IOException {
 
         //Given
@@ -39,8 +39,8 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest{
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isNotEqualTo(jsonContentControlResponse);
     }
 
-    @UsingDataSet(locations = "/datasets/oneTeamInDBExists.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
+    @UsingDataSet(locations = "/datasets/oneTeamInDBExists.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void addTeamWhenUserExists() throws IOException {
 
         //Given
