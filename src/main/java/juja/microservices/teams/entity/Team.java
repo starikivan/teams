@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
 import java.util.Calendar;
@@ -11,9 +12,11 @@ import java.util.Date;
 
 /**
  * @author Andrii.Sidun
+ * @author Ivan Shapovalov
  */
 
 @Getter
+@ToString
 public class Team {
 
     @Id
