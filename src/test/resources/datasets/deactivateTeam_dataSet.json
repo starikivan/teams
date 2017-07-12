@@ -1,0 +1,40 @@
+{
+  "team": [
+    {
+      "id":"qwert",
+      "uuidOne":"user-in-one-team",
+      "uuidTwo":"",
+      "uuidThree":"",
+      "uuidFour":"user-in-several-teams",
+      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "dismissDate":{ "$date" : "2025-08-01T00:00:00.000Z"}
+    },
+    {
+      "id":"qwert",
+      "uuidOne":"user-in-several-teams",
+      "uuidTwo":"",
+      "uuidThree":"",
+      "uuidFour":"",
+      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "dismissDate":{ "$date" : "2025-08-01T00:00:00.000Z"}
+    },
+    {
+      "id":"qwert",
+      "uuidOne":"user-in-several-teams",
+      "uuidTwo":"user-in-one-team",
+      "uuidThree":"",
+      "uuidFour":"",
+      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "dismissDate":{ "$date" : "2017-05-01T00:00:00.000Z"}
+    },
+    {
+      "id":"qwert",
+      "uuidOne":"user-in-dismissed-team",
+      "uuidTwo":"",
+      "uuidThree":"",
+      "uuidFour":"",
+      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "dismissDate":{ "$date" : "2017-05-01T00:00:00.000Z"}
+    }
+  ]
+}

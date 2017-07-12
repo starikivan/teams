@@ -28,10 +28,9 @@ public class TeamTest {
         final Date startDate = new Date();
         Date dismissDate = getDatePlusOneMonth(startDate);
 
-        Team team = new Team(creator, uuidOne, uuidTwo, uuidThree, uuidFour);
+        Team team = new Team(uuidOne, uuidTwo, uuidThree, uuidFour);
         //Then
         assertEquals(null, team.getId());
-        assertEquals(creator, team.getFrom());
         assertEquals(uuidOne, team.getUuidOne());
         assertEquals(uuidTwo, team.getUuidTwo());
         assertEquals(uuidThree, team.getUuidThree());

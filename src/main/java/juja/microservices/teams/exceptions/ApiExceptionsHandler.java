@@ -41,6 +41,27 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserNotInTeamException.class)
+    public ResponseEntity<ApiErrorMessage> handleUserNotInTeamException(
+            UserNotInTeamException ex) {
+        ApiErrorMessage message =
+                ApiErrorMessage.builder(ApiErrorStatus.USER_NOT_IN_TEAM_EXCEPTION)
+                        .httpStatus(HttpStatus.BAD_REQUEST.value())
+                        .exceptionMessage(ex.getMessage())
+                        .build();
+        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserInSeveralTeamsException.class)
+    public ResponseEntity<ApiErrorMessage> handleUserInSeveralTeamsException(
+            UserInSeveralTeamsException ex) {
+        ApiErrorMessage message =
+                ApiErrorMessage.builder(ApiErrorStatus.USER_IN_SEVERAL_TEAMS_EXCEPTION)
+                        .httpStatus(HttpStatus.BAD_REQUEST.value())
+                        .exceptionMessage(ex.getMessage())
+                        .build();
+        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+    }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex,

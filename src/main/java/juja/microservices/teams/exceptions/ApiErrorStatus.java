@@ -1,6 +1,19 @@
 package juja.microservices.teams.exceptions;
 
 public enum ApiErrorStatus {
+
+    USER_NOT_IN_TEAM_EXCEPTION(
+            "TMF-F2",
+            "You cannot deactivate team if user not in team",
+            "The reason of the exception is that user not in team"
+    ),
+
+    USER_IN_SEVERAL_TEAMS_EXCEPTION(
+            "TMF-F2",
+            "You cannot deactivate team if user in several teams",
+            "The reason of the exception is that user in several teams"
+    ),
+
     TEAMS_EXCEPTION(
             "0",
             "Oops something went wrong :(",

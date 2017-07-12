@@ -2,7 +2,6 @@ package juja.microservices.teams.controller;
 
 import juja.microservices.teams.entity.Team;
 import juja.microservices.teams.entity.TeamRequest;
-import juja.microservices.teams.entity.UserUuidRequest;
 import juja.microservices.teams.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Ivan Shapovalov
  */
-
 @RestController
 @RequestMapping(value = "/v1")
 public class TeamController {
@@ -33,14 +29,13 @@ public class TeamController {
         return null;
     }
 
-    @PutMapping(value = "/teams/{uuid}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
+    @PutMapping(value = "/teams/users/{uuid}", produces = "application/json")
+    public ResponseEntity<?> dismissTeam(@PathVariable String uuid) {
         logger.debug("Received dismiss team request. User id in Team: {}", uuid);
         Team team= teamService.dismissTeam(uuid);
         logger.info("Team dismissed. Team Id: {}", team.getId());
-        logger.debug("Request dismiss team returned {}", team.toString());
+        logger.info("Request dismiss team returned {}", team.toString());
         return ResponseEntity.ok(team.toString());
-        return null;
     }
 
     @GetMapping(value = "/teams", produces = "application/json")
