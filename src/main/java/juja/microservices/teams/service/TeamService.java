@@ -24,14 +24,19 @@ public class TeamService {
     private TeamRepository teamRepository;
 
     public Team dismissTeam(String uuid) {
+        logger.debug("Send request to repository: get teams of user <{}> for current date", uuid);
         List<Team> teams = teamRepository.getUserTeams(uuid);
+        logger.info("Received list of teams, size = {}", teams.size());
+        logger.debug("Full list of teams <{}>", teams.toString());
         if (teams.size() == 1) {
             Team team = teams.get(0);
             team.setDismissDate(LocalDateTime.now());
             return teamRepository.saveTeam(team);
         } else if (teams.size() == 0) {
+            logger.warn("User <{}> is not in the same team ", uuid);
             throw new UserNotInTeamException(String.format("User with uuid '%s' not in team now", uuid));
         } else {
+            logger.warn("User <{}> is in several teams ", uuid);
             throw new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid));
         }
     }

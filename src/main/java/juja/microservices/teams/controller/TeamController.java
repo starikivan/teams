@@ -34,7 +34,7 @@ public class TeamController {
         logger.debug("Received dismiss team request. User id in Team: {}", uuid);
         Team team= teamService.dismissTeam(uuid);
         logger.info("Team dismissed. Team Id: {}", team.getId());
-        logger.info("Request dismiss team returned {}", team.toString());
+        logger.debug("Request dismiss team returned {}", team.toString());
         return ResponseEntity.ok(team.toString());
     }
 
