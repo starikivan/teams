@@ -91,6 +91,8 @@ public class BaseAcceptanceTest {
             response = specification.post(url);
         } else if (HttpMethod.GET == method) {
             response = specification.get(url);
+        } else if (HttpMethod.PUT == method) {
+            response = specification.put(url);
         } else {
             throw new RuntimeException("Unsupported HttpMethod in getResponse()");
         }
