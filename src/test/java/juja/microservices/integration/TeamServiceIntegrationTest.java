@@ -47,7 +47,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
 
         Team actual= teamService.addTeam(teamRequest);
 
-        assertEquals(expected, new TeamDTO(actual));
+        assertEquals(expected.toString(), new TeamDTO(actual).toString());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
 
         expectedException.expect(UserExistsException.class);
-        expectedException.expectMessage(String.format("User(s) '[%s]' exists in a current team", uuid));
+        expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", "["+uuid+"]"));
 
         teamService.addTeam(teamRequest);
     }

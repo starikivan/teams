@@ -4,8 +4,7 @@ import juja.microservices.teams.dao.TeamRepository;
 import juja.microservices.teams.entity.Team;
 import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.exceptions.UserExistsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import juja.microservices.teams.exceptions.UserNotInTeamException;
 import org.springframework.stereotype.Service;
@@ -21,24 +20,23 @@ import java.util.Set;
  * @author Ivan Shapovalov
  */
 @Service
+@Slf4j
 public class TeamService {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Inject
     private TeamRepository teamRepository;
 
     public Team addTeam(TeamRequest teamRequest) {
-        logger.debug("Start TeamService.addTeam. Team: {}", teamRequest);
+        log.debug("Started 'addTeam' TeamRequest: {}", teamRequest);
         Set<String> usersInTeams = usersInCurrentTeams(teamRequest);
         if (usersInTeams.size() > 0) {
-            logger.warn("User(s) '{}' exists in a team",usersInTeams);
-            throw new UserExistsException(String.format("User(s) '%s' exists in a current team", usersInTeams.toString()));
+            log.warn("User(s) '{}' exists in a another teams",usersInTeams);
+            throw new UserExistsException(String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
         }
         Team team = mappingRequestToTeam(teamRequest);
+        log.debug("Started 'Save team '{}'", team);
         teamRepository.saveTeam(team);
-        logger.info("Added new Team with parameters '{}'", team);
-        logger.debug("Finish TeamService.addTeam. newTeamId: {}", team.getId());
+        log.info("Finished 'Save team' '{}'", team.getId());
+        log.debug("Finished 'Save team '{}'", team);
         return team;
     }
 
@@ -46,41 +44,43 @@ public class TeamService {
         return new Team(teamRequest.getMembers());
     }
 
-    private Set<String> usersInCurrentTeams(TeamRequest team) {
-        logger.debug("Start usersInCurrentTeams()");
-        Set<String> usersInTeams = new HashSet();
-        team.getMembers().stream()
+    private Set<String> usersInCurrentTeams(TeamRequest teamRequest) {
+        log.debug("Started 'usersInCurrentTeams' with teamRequest '{}'",teamRequest);
+        Set<String> usersInTeams = new HashSet<>();
+        teamRequest.getMembers()
                 .forEach(uuid -> {
                     List<Team> teams = teamRepository.getUserTeams(uuid);
                     if (teams.size() != 0) {
                         usersInTeams.add(uuid);
                     }
                 });
-        logger.info("Result execution usersInCurrentTeams is {}", usersInTeams.size());
-        logger.debug("Finish usersInCurrentTeams()");
+        log.info("Finished 'usersInCurrentTeams' with teamRequest '{}'",teamRequest);
         return usersInTeams;
     }
 
     public Team deactivateTeam(String uuid) {
+        log.debug("Started 'deactivateTeam' with uuid '{}'",uuid);
         List<Team> teams = getUserTeams(uuid);
+        log.info("Finished 'usersInCurrentTeams' with uuid '{}. Teams size '",uuid,teams.size());
+        log.debug("Finished 'usersInCurrentTeams' with uuid '{}'. Teams ",uuid,teams.toString());
         if (teams.size() == 1) {
             Team team = teams.get(0);
             team.setDeactivateDate(LocalDate.now());
             return teamRepository.saveTeam(team);
         } else if (teams.size() == 0) {
-            logger.warn("User <{}> is not in the same team ", uuid);
+            log.warn("User <{}> is not in the team now", uuid);
             throw new UserNotInTeamException(String.format("User with uuid '%s' not in team now", uuid));
         } else {
-            logger.warn("User <{}> is in several teams ", uuid);
+            log.warn("User <{}> is in several teams ", uuid);
             throw new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid));
         }
     }
 
-    public List<Team> getUserTeams(String uuid) {
-        logger.debug("Send request to repository: get teams of user <{}> for current date", uuid);
+    private List<Team> getUserTeams(String uuid) {
+        log.debug("Started 'getUserTeams' with uuid '{}'",uuid);
         List<Team> teams = teamRepository.getUserTeams(uuid);
-        logger.info("Received list of teams, size = {}", teams.size());
-        logger.debug("Full list of teams <{}>", teams.toString());
+        log.info("Finished 'getUserTeams' with uuid '{}' . Teams size '{}'",uuid,teams.size());
+        log.debug("Finished 'getUserTeams' with uuid '{}' . Teams '{}'",uuid,teams);
         return teams;
     }
 }

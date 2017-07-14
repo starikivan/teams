@@ -4,8 +4,7 @@ import juja.microservices.teams.entity.Team;
 import juja.microservices.teams.entity.TeamDTO;
 import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.service.TeamService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,28 +17,27 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping(value = "/v1/teams")
+@Slf4j
 public class TeamController {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private TeamService teamService;
 
     @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
-        logger.debug("Received add team request. Requested TeamRequest: {}", request);
+        log.debug("Received 'Add team' request {}", request);
         Team team = teamService.addTeam(request);
-        logger.info("New team added. Id: {}", team.getId());
-        logger.debug("Request add team returned {}", team);
+        log.info("New team added. Id: {}", team.getId());
+        log.debug("Request 'Add team' returned {}", team);
         return ResponseEntity.ok(new TeamDTO(team));
     }
 
     @PutMapping(value = "/users/{uuid}", produces = "application/json")
     public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
-        logger.debug("Received deactivate team request. User id in Team: {}", uuid);
+        log.debug("Received 'Deactivate team' request. Deactivate team of user {}", uuid);
         Team team= teamService.deactivateTeam(uuid);
-        logger.info("Team deacticated. Team Id: {}", team.getId());
-        logger.debug("Request deactivate team returned {}", team.toString());
+        log.info("Team deacticated. Team Id: {}", team.getId());
+        log.debug("Request 'Deactivate team' returned team {}", team);
         return ResponseEntity.ok(new TeamDTO(team));
     }
 
@@ -54,5 +52,4 @@ public class TeamController {
         //TODO Should be implemented feature TMF-F4 - TMF-F5
         return null;
     }
-
 }

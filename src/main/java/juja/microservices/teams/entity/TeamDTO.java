@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import juja.microservices.teams.exceptions.TeamsException;
-import lombok.Data;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -14,7 +15,8 @@ import java.util.Set;
  * @author Ivan Shapovalov
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
+@Getter
+@Slf4j
 public class TeamDTO {
 
     @JsonProperty ("members")
@@ -36,13 +38,13 @@ public class TeamDTO {
 
     @Override
     public String toString() {
-        String json="";
+        String json;
         ObjectMapper mapper = new ObjectMapper();
         try {
             json = mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            //logger.warn("Convert TeamDTO failed. TeamDTO <{}>", this.getMembers());
-            new TeamsException(String.format("Convert TeamDTO failed. TeamDTO members<>",this.getMembers()));
+            log.warn("Convert TeamDTO failed. TeamDTO <{}>", this.getMembers());
+            throw new TeamsException(String.format("Convert TeamDTO failed. TeamDTO members '%s'",members));
         }
         return json;
     }
