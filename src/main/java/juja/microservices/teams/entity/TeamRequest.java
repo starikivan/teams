@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Getter
 @ToString
 public class TeamRequest {
-    
+
     @NotEmpty
     private String from;
     @NotEmpty
@@ -27,10 +27,10 @@ public class TeamRequest {
 
     @JsonCreator
     public TeamRequest(@JsonProperty("from") String from,
-                @JsonProperty("uuidOne") String uuidOne,
-                @JsonProperty("uuidTwo") String uuidTwo,
-                @JsonProperty("uuidThree") String uuidThree,
-                @JsonProperty("uuidFour") String uuidFour) {
+                       @JsonProperty("uuidOne") String uuidOne,
+                       @JsonProperty("uuidTwo") String uuidTwo,
+                       @JsonProperty("uuidThree") String uuidThree,
+                       @JsonProperty("uuidFour") String uuidFour) {
         this.from = from;
         this.uuidOne = uuidOne;
         this.uuidTwo = uuidTwo;

@@ -7,6 +7,18 @@ public enum ApiErrorStatus {
             "The exception is general in team microservice"
     ),
 
+    TEAM_NOT_KEEPER_EXCEPTION(
+            "TMF-F1-D1",
+            "Sorry, but you're not a keeper",
+            "Exception - NotKeeperException"
+    ),
+
+    TEAM_USER_EXISTS_EXCEPTION(
+            "TMF-F1-D3",
+            "Sorry, but the user exists in a other team",
+            "Exception - UserExistsException"
+    ),
+
     OTHER_EXCEPTION(
             "2",
             "Oops something went wrong :(",
