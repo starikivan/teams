@@ -30,11 +30,11 @@ public class Team {
     private String uuidFour;
 
     @JsonProperty("startDate")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
 
     @JsonProperty("dismissDate")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dismissDate;
 
     @JsonCreator
@@ -59,11 +59,7 @@ public class Team {
 
     @Override
     public String toString() {
-       String lineSeparator = System.lineSeparator();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        String startDate = dateFormat.format(getStartDate().getTime());
-//        String dismissDate = dateFormat.format(getDismissDate().getTime());
-
+        String lineSeparator = System.lineSeparator();
         return "Team:".concat(lineSeparator)
                 .concat("uuidOne = ").concat(uuidOne).concat(lineSeparator)
                 .concat("uuidTwo = ").concat(uuidTwo).concat(lineSeparator)

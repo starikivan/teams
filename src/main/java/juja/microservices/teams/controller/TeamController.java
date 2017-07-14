@@ -15,7 +15,7 @@ import javax.validation.Valid;
  * @author Ivan Shapovalov
  */
 @RestController
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/v1/teams")
 public class TeamController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -23,36 +23,31 @@ public class TeamController {
     @Inject
     private TeamService teamService;
 
-    @PostMapping(value = "/teams", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
         //TODO Should be implemented feature TMF-F1
         return null;
     }
 
-    @PutMapping(value = "/teams/users/{uuid}", produces = "application/json")
+    @PutMapping(value = "/users/{uuid}", produces = "application/json")
     public ResponseEntity<?> dismissTeam(@PathVariable String uuid) {
         logger.debug("Received dismiss team request. User id in Team: {}", uuid);
         Team team= teamService.dismissTeam(uuid);
         logger.info("Team dismissed. Team Id: {}", team.getId());
         logger.debug("Request dismiss team returned {}", team.toString());
-        return ResponseEntity.ok(team.toString());
+        return ResponseEntity.ok(team);
     }
 
-    @GetMapping(value = "/teams", produces = "application/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<?> getAllActiveTeams() {
         //TODO Should be implemented feature TMF-F3
         return null;
     }
 
-    @GetMapping(value = "/teams/{id}", produces = "application/json")
+    @GetMapping(value = "/users/{uuid}", produces = "application/json")
     public ResponseEntity<?> getTeamById(@PathVariable String id) {
-        //TODO Should be implemented feature TMF-F4
+        //TODO Should be implemented feature TMF-F4 - TMF-F5
         return null;
     }
 
-    @GetMapping(value = "/teams/myteam/{uuid}", produces = "application/json")
-    public ResponseEntity<?> getMyTeam(@PathVariable String uuid) {
-        //TODO Should be implemented feature TMF-F5
-        return null;
-    }
 }

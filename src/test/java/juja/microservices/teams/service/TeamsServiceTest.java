@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -50,7 +51,7 @@ public class TeamsServiceTest {
 
         service.dismissTeam(uuid);
         verify(repository).getUserTeams(uuid);
-        Mockito.verifyNoMoreInteractions(repository);
+        verifyNoMoreInteractions(repository);
     }
 
     @Test
@@ -64,7 +65,7 @@ public class TeamsServiceTest {
 
         service.dismissTeam(uuid);
         verify(repository).getUserTeams(uuid);
-        Mockito.verifyNoMoreInteractions(repository);
+        verifyNoMoreInteractions(repository);
     }
 
     @Test
@@ -79,7 +80,7 @@ public class TeamsServiceTest {
         service.dismissTeam(uuid);
         verify(repository).getUserTeams(uuid);
         verify(repository).saveTeam(team);
-        Mockito.verifyNoMoreInteractions(repository);
+        verifyNoMoreInteractions(repository);
     }
 
 }
