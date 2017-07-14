@@ -1,19 +1,16 @@
 package juja.microservices.teams.controller;
 
 import juja.microservices.teams.entity.Team;
+import juja.microservices.teams.entity.TeamDTO;
 import juja.microservices.teams.entity.TeamRequest;
-import juja.microservices.teams.entity.UserUuidRequest;
 import juja.microservices.teams.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Ivan Shapovalov
@@ -34,19 +31,19 @@ public class TeamController {
         Team team = teamService.addTeam(request);
         logger.info("New team added. Id: {}", team.getId());
         logger.debug("Request add team returned {}", team);
-        return ResponseEntity.ok(team);
+        return ResponseEntity.ok(new TeamDTO(team));
     }
 
     @PutMapping(value = "/users/{uuid}", produces = "application/json")
-    public ResponseEntity<?> dismissTeam(@PathVariable String uuid) {
-        logger.debug("Received dismiss team request. User id in Team: {}", uuid);
-        Team team = teamService.dismissTeam(uuid);
-        logger.info("Team dismissed. Team Id: {}", team.getId());
-        logger.debug("Request dismiss team returned {}", team.toString());
-        return ResponseEntity.ok(team);
+    public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
+        logger.debug("Received deactivate team request. User id in Team: {}", uuid);
+        Team team= teamService.deactivateTeam(uuid);
+        logger.info("Team deacticated. Team Id: {}", team.getId());
+        logger.debug("Request deactivate team returned {}", team.toString());
+        return ResponseEntity.ok(new TeamDTO(team));
     }
 
-    @GetMapping(value = "/teams", produces = "application/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<?> getAllActiveTeams() {
         //TODO Should be implemented feature TMF-F3
         return null;

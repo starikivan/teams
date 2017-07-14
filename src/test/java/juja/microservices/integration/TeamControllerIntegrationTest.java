@@ -11,11 +11,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Ivan Shapovalov
+ * @author Andrii Sidun
+ */
 @RunWith(SpringRunner.class)
 public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     private static final String TEAMS_DEACTIVATE_URL = "/v1/teams/users/";
@@ -32,7 +35,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
-    public void test_dismissTeamIfUserInTeamExecutedCorrectly() throws Exception {
+    public void test_deactivateTeamIfUserInTeamExecutedCorrectly() throws Exception {
         final String uuid = "user-in-one-team";
         mockMvc.perform(put(TEAMS_DEACTIVATE_URL+uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -41,7 +44,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
-    public void test_dismissTeamIfUserNotInTeamExecutedCorrectly() throws Exception {
+    public void test_deactivateTeamIfUserNotInTeamExecutedCorrectly() throws Exception {
         final String uuid = "user-not-in-team";
         mockMvc.perform(put(TEAMS_DEACTIVATE_URL+uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -50,7 +53,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
-    public void test_dismissTeamIfUserInSeveralTeamsExecutedCorrectly() throws Exception {
+    public void test_deactivateTeamIfUserInSeveralTeamsExecutedCorrectly() throws Exception {
         final String uuid = "user-in-several-teams";
         mockMvc.perform(put(TEAMS_DEACTIVATE_URL+uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))

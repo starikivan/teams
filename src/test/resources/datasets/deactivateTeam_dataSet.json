@@ -1,40 +1,24 @@
 {
   "team": [
     {
-      "id":"qwert",
-      "uuidOne":"user-in-one-team",
-      "uuidTwo":"",
-      "uuidThree":"",
-      "uuidFour":"user-in-several-teams",
-      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
-      "dismissDate":{ "$date" : "2025-08-01T00:00:00.000Z"}
+      "uuids": ["user-in-one-team","user1","user2","user-in-several-teams"],
+      "activatetDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-08-30T00:00:00.000Z"}
     },
     {
-      "id":"qwert",
-      "uuidOne":"user-in-several-teams",
-      "uuidTwo":"",
-      "uuidThree":"",
-      "uuidFour":"",
-      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
-      "dismissDate":{ "$date" : "2025-08-01T00:00:00.000Z"}
+      "uuids":["user-in-several-teams","user3","user4","user5"],
+      "activatetDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-08-30T00:00:00.000Z"}
     },
     {
-      "id":"qwert",
-      "uuidOne":"user-in-several-teams",
-      "uuidTwo":"user-in-one-team",
-      "uuidThree":"",
-      "uuidFour":"",
-      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
-      "dismissDate":{ "$date" : "2017-05-01T00:00:00.000Z"}
+      "uuids":["user-in-several-teams","user-in-one-team","user7"],
+      "activatetDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-05-30T00:00:00.000Z"}
     },
     {
-      "id":"qwert",
-      "uuidOne":"user-in-dismissed-team",
-      "uuidTwo":"",
-      "uuidThree":"",
-      "uuidFour":"",
-      "startDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
-      "dismissDate":{ "$date" : "2017-05-01T00:00:00.000Z"}
+      "uuids":["user-in-deactivated-team","user8","user9","user10"],
+      "activatetDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-04-30T00:00:00.000Z"}
     }
   ]
 }

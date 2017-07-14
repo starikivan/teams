@@ -3,65 +3,58 @@ package juja.microservices.teams.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Andrii.Sidun
  * @author Ivan Shapovalov
  */
 @Getter
-@ToString
+@Setter
+@Data
 public class Team {
 
     @Id
     private String id;
-    private String uuidOne;
-    private String uuidTwo;
-    private String uuidThree;
-    private String uuidFour;
+    private Set<String> uuids;
 
-    @JsonProperty("startDate")
+    @JsonProperty("activatetDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date startDate;
+    private Date activatetDate;
 
-    @JsonProperty("dismissDate")
+    @JsonProperty("deactivateDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date dismissDate;
+    private Date deactivateDate;
 
     @JsonCreator
-    public Team(                @JsonProperty("uuidOne") String uuidOne,
-                @JsonProperty("uuidTwo") String uuidTwo,
-                @JsonProperty("uuidThree") String uuidThree,
-                @JsonProperty("uuidFour") String uuidFour) {
-        this.uuidOne = uuidOne;
-        this.uuidTwo = uuidTwo;
-        this.uuidThree = uuidThree;
-        this.uuidFour = uuidFour;
-        this.startDate = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startDate);
-        cal.add(Calendar.MONTH, 1);
-        dismissDate = Date.from(cal.toInstant());
+    public Team(@JsonProperty("uuids") Set<String> uuids) {
+        this.uuids = uuids;
+        this.activatetDate = Date.from(LocalDate.now().
+                atStartOfDay(ZoneId.systemDefault()).toInstant());
+        this.deactivateDate = Date.from(LocalDate.now().plusMonths(1)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public void setDismissDate(LocalDateTime dismissDate) {
-        this.dismissDate = Date.from(dismissDate.atZone(ZoneId.systemDefault()).toInstant());
+    public void setDeactivateDate(LocalDate deactivateDate) {
+        this.deactivateDate = Date.from(deactivateDate.
+                atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     @Override
     public String toString() {
-        String lineSeparator = System.lineSeparator();
-        return "Team:".concat(lineSeparator)
-                .concat("uuidOne = ").concat(uuidOne).concat(lineSeparator)
-                .concat("uuidTwo = ").concat(uuidTwo).concat(lineSeparator)
-                .concat("uuidThree = ").concat(uuidThree).concat(lineSeparator)
-                .concat("uuidFour = ").concat(uuidFour).concat(lineSeparator);
+        return "{" +
+                "\"uuids\":" + uuids +
+                ", activatetDate=" + activatetDate +
+                ", deactivateDate=" + deactivateDate +
+                '}';
     }
 }

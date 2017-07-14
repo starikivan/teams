@@ -62,25 +62,25 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
                         .build();
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(TeamNotKeeperException.class)
-    public ResponseEntity<ApiErrorMessage> handleKeepersException(TeamNotKeeperException ex) {
+    @ExceptionHandler(UserNotKeeperException.class)
+    public ResponseEntity<ApiErrorMessage> handleKeepersException(UserNotKeeperException ex) {
         ApiErrorMessage message =
-                ApiErrorMessage.builder(ApiErrorStatus.TEAM_NOT_KEEPER_EXCEPTION)
+                ApiErrorMessage.builder(ApiErrorStatus.USER_NOT_KEEPER_EXCEPTION)
                         .httpStatus(HttpStatus.BAD_REQUEST.value())
                         .exceptionMessage(ex.getMessage())
                         .build();
-        logger.warn("Handle TeamNotKeeperException before out " + message);
+        logger.warn("Handle UserNotKeeperException before out " + message);
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(TeamUserExistsException.class)
-    public ResponseEntity<ApiErrorMessage> handleKeepersException(TeamUserExistsException ex) {
+    @ExceptionHandler(UserExistsException.class)
+    public ResponseEntity<ApiErrorMessage> handleKeepersException(UserExistsException ex) {
         ApiErrorMessage message =
-                ApiErrorMessage.builder(ApiErrorStatus.TEAM_USER_EXISTS_EXCEPTION)
+                ApiErrorMessage.builder(ApiErrorStatus.USER_EXISTS_EXCEPTION)
                         .httpStatus(HttpStatus.BAD_REQUEST.value())
                         .exceptionMessage(ex.getMessage())
                         .build();
-        logger.warn("Handle TeamUserExistsException before out " + message);
+        logger.warn("Handle UserExistsException before out " + message);
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
     }
 
