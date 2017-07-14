@@ -60,7 +60,7 @@ public class TeamControllerTest {
                 "f827811f-51e8-4fc4-a56d-aebcd2193bc3",
                 "asdqwe3",
                 "asdqwe4")));
-        final Team team = new Team(teamRequest.getUuids());
+        final Team team = new Team(teamRequest.getMembers());
 
         when(teamService.addTeam(any(TeamRequest.class))).thenReturn(team);
         String result = getGoodPostResult("/" + restApiVersion + "/teams", jsonContentRequest);

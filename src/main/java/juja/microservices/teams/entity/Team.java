@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class Team {
 
     @Id
     private String id;
-    private Set<String> uuids;
+    private Set<String> members;
 
     @JsonProperty("activatetDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
@@ -36,8 +35,8 @@ public class Team {
     private Date deactivateDate;
 
     @JsonCreator
-    public Team(@JsonProperty("uuids") Set<String> uuids) {
-        this.uuids = uuids;
+    public Team(@JsonProperty("members") Set<String> members) {
+        this.members = members;
         this.activatetDate = Date.from(LocalDate.now().
                 atStartOfDay(ZoneId.systemDefault()).toInstant());
         this.deactivateDate = Date.from(LocalDate.now().plusMonths(1)
@@ -52,7 +51,7 @@ public class Team {
     @Override
     public String toString() {
         return "{" +
-                "\"uuids\":" + uuids +
+                "\"members\":" + members +
                 ", activatetDate=" + activatetDate +
                 ", deactivateDate=" + deactivateDate +
                 '}';

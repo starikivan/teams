@@ -30,7 +30,7 @@ public class TeamRepository {
         logger.debug("Started get teams of user <{}> from DB for current date", uuid);
         Date currentDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(currentDate)
-                .and("uuids").is(uuid)
+                .and("members").is(uuid)
         ), Team.class);
         logger.debug("Finished get teams of user <{}> from DB for current date. Teams <{}>", uuid, teams.toString());
         return teams;

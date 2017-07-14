@@ -40,7 +40,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         Team actual = teamRepository.saveTeam(team);
 
         assertNotNull(actual);
-        assertThat(actual.getUuids(), is(team.getUuids()));
+        assertThat(actual.getMembers(), is(team.getMembers()));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         List<Team> actual = teamRepository.getUserTeams(userInOneTeam);
 
         assertEquals(actual.size(),1);
-        assertThat(actual.get(0).getUuids(), is(team.getUuids()));
+        assertThat(actual.get(0).getMembers(), is(team.getMembers()));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
 
         assertEquals(actual.size(),expected.size());
         for (int i = 0; i < actual.size(); i++) {
-            assertThat(actual.get(i).getUuids(), is(expected.get(i).getUuids()));
+            assertThat(actual.get(i).getMembers(), is(expected.get(i).getMembers()));
         }
     }
 

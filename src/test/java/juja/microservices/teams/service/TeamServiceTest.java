@@ -45,7 +45,7 @@ public class TeamServiceTest {
     public void test_addTeamIfUserNotInAnotherTeamsExecutedCorrectly() {
         //Given
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
-        Team expected = new Team(teamRequest.getUuids());
+        Team expected = new Team(teamRequest.getMembers());
         List<Team> userInTeams = new ArrayList();
         when(teamRepository.getUserTeams(anyString())).thenReturn(userInTeams);
         when(teamRepository.saveTeam(any(Team.class))).thenReturn(expected);
@@ -55,7 +55,7 @@ public class TeamServiceTest {
         verify(teamRepository, atLeast(4)).getUserTeams(anyString());
         verify(teamRepository).saveTeam(any(Team.class));
         verifyNoMoreInteractions(teamRepository);
-        assertEquals(expected.getUuids(), actual.getUuids());
+        assertEquals(expected.getMembers(), actual.getMembers());
     }
 
     @Test(expected = UserExistsException.class)

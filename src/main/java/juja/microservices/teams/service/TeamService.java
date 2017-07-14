@@ -43,13 +43,13 @@ public class TeamService {
     }
 
     private Team mappingRequestToTeam(TeamRequest teamRequest) {
-        return new Team(teamRequest.getUuids());
+        return new Team(teamRequest.getMembers());
     }
 
     private Set<String> usersInCurrentTeams(TeamRequest team) {
         logger.debug("Start usersInCurrentTeams()");
         Set<String> usersInTeams = new HashSet();
-        team.getUuids().stream()
+        team.getMembers().stream()
                 .forEach(uuid -> {
                     List<Team> teams = teamRepository.getUserTeams(uuid);
                     if (teams.size() != 0) {

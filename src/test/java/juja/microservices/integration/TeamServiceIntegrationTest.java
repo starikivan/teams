@@ -43,7 +43,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/addTeam_userNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly(){
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
-        TeamDTO expected = new TeamDTO(new Team(teamRequest.getUuids()));
+        TeamDTO expected = new TeamDTO(new Team(teamRequest.getMembers()));
 
         Team actual= teamService.addTeam(teamRequest);
 

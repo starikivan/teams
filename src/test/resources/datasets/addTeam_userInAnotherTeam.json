@@ -1,12 +1,12 @@
 {
   "team": [
     {
-      "uuids": ["user-in-several-teams","user1","user2","user3"],
+      "members": ["user-in-several-teams","user1","user2","user3"],
       "activatetDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-08-30T00:00:00.000Z"}
     },
     {
-      "uuids":["user-in-several-teams","user5","user6","user7"],
+      "members":["user-in-several-teams","user5","user6","user7"],
       "activatetDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-08-30T00:00:00.000Z"}
     }

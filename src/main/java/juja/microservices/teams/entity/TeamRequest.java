@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -18,10 +17,10 @@ import java.util.Set;
 public class TeamRequest {
 
     @NotEmpty
-    private Set<String> uuids;
+    private Set<String> members;
 
     @JsonCreator
-    public TeamRequest(@JsonProperty("uuids") Set<String> uuids) {
-        this.uuids = uuids;
+    public TeamRequest(@JsonProperty("members") Set<String> members) {
+        this.members = members;
     }
 }
