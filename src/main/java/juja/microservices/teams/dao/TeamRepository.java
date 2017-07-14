@@ -1,6 +1,8 @@
 package juja.microservices.teams.dao;
 
 import juja.microservices.teams.entity.Team;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -12,6 +14,7 @@ import java.util.List;
 
 /**
  * @author Ivan Shapovalov
+ * @author Andrii.Sidun
  */
 @Repository
 public class TeamRepository {
@@ -21,19 +24,14 @@ public class TeamRepository {
     @Inject
     private MongoTemplate mongoTemplate;
 
-    public String add(Team team){
-        mongoTemplate.save(team);
-        return team.getId();
-    }
-
-    public boolean isUserInOtherTeam(String uuid){
+    public boolean isUserInOtherTeam(String uuid) {
         Date currentData = new Date();
         boolean result = false;
         List<Team> teams = mongoTemplate.find(new Query(
                 new Criteria().orOperator(
                         Criteria.where("uuidOne").is(uuid), Criteria.where("uuidTwo").is(uuid),
                         Criteria.where("uuidThree").is(uuid), Criteria.where("uuidFour").is(uuid))), Team.class);
-        for (Team team: teams) {
+        for (Team team : teams) {
             if (team.getDismissDate().after(currentData)) {
                 return true;
             }
@@ -44,14 +42,14 @@ public class TeamRepository {
     public List<Team> getUserTeams(String uuid) {
         logger.debug("Started get teams of user <{}> from DB for current date", uuid);
         Date currentData = new Date();
-        List<Team> teams=mongoTemplate.find(new Query(
+        List<Team> teams = mongoTemplate.find(new Query(
                 new Criteria()
                         .andOperator(Criteria.where("dismissDate").gte(currentData))
                         .orOperator(
                                 Criteria.where("uuidOne").is(uuid), Criteria.where("uuidTwo").is(uuid),
                                 Criteria.where("uuidThree").is(uuid), Criteria.where("uuidFour").is(uuid))
         ), Team.class);
-        logger.debug("Finished get teams of user <{}> from DB for current date. Teams <{}>", uuid,teams.toString());
+        logger.debug("Finished get teams of user <{}> from DB for current date. Teams <{}>", uuid, teams.toString());
         return teams;
     }
 
@@ -61,5 +59,4 @@ public class TeamRepository {
         logger.debug("Finished save team <{}> into DB ", team.toString());
         return team;
     }
-
 }

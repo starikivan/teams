@@ -6,13 +6,8 @@ import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.exceptions.TeamUserExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import juja.microservices.teams.dao.TeamRepository;
-import juja.microservices.teams.entity.Team;
-import juja.microservices.teams.exceptions.TeamsException;
 import juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import juja.microservices.teams.exceptions.UserNotInTeamException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -31,25 +26,25 @@ public class TeamService {
     @Inject
     private TeamRepository teamRepository;
 
-    public String addTeam(TeamRequest teamRequest){
+    public Team addTeam(TeamRequest teamRequest) {
         logger.debug("Start TeamService.addTeam. Team: {}", teamRequest);
-        if (isAnyBodyInOtherTeam(teamRequest)){
+        if (isAnyBodyInOtherTeam(teamRequest)) {
             logger.warn("Some user(s) exists in a team");
             throw new TeamUserExistsException("Some user(s) exists in a team");
         }
         Team team = mappingRequestToTeam(teamRequest);
-        String newTeamId = teamRepository.add(team);
+        teamRepository.saveTeam(team);
         logger.info("Added new Team with parameters '{}'", team);
-        logger.debug("Finish TeamService.addTeam. newTeamId: {}", newTeamId);
-        return newTeamId;
+        logger.debug("Finish TeamService.addTeam. newTeamId: {}", team.getId());
+        return team;
     }
 
     private Team mappingRequestToTeam(TeamRequest teamRequest) {
-        return new Team(teamRequest.getFrom(), teamRequest.getUuidOne(), teamRequest.getUuidTwo(),
+        return new Team(teamRequest.getUuidOne(), teamRequest.getUuidTwo(),
                 teamRequest.getUuidThree(), teamRequest.getUuidFour());
     }
 
-    private boolean isAnyBodyInOtherTeam(TeamRequest team){
+    private boolean isAnyBodyInOtherTeam(TeamRequest team) {
         logger.debug("Start isAnyBodyInOtherTeam()");
         boolean result = false;
         if (teamRepository.isUserInOtherTeam(team.getUuidOne()) ||
@@ -80,6 +75,4 @@ public class TeamService {
             throw new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid));
         }
     }
-
-
 }

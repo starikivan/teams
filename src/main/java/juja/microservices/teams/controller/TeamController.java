@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * @author Ivan Shapovalov
+ * @author Andrii Sidun
  */
 @RestController
 @RequestMapping(value = "/v1/teams")
@@ -27,20 +28,19 @@ public class TeamController {
     @Inject
     private TeamService teamService;
 
-    @PostMapping(value = "/teams", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
         logger.debug("Received add team request. Requested TeamRequest: {}", request);
-        String id = teamService.addTeam(request);
-        List<String> ids = Collections.singletonList(id);
-        logger.info("New team added. Id: {}", ids);
-        logger.debug("Request add team returned {}", ids.toString());
-        return ResponseEntity.ok(ids);
+        Team team = teamService.addTeam(request);
+        logger.info("New team added. Id: {}", team.getId());
+        logger.debug("Request add team returned {}", team);
+        return ResponseEntity.ok(team);
     }
 
     @PutMapping(value = "/users/{uuid}", produces = "application/json")
     public ResponseEntity<?> dismissTeam(@PathVariable String uuid) {
         logger.debug("Received dismiss team request. User id in Team: {}", uuid);
-        Team team= teamService.dismissTeam(uuid);
+        Team team = teamService.dismissTeam(uuid);
         logger.info("Team dismissed. Team Id: {}", team.getId());
         logger.debug("Request dismiss team returned {}", team.toString());
         return ResponseEntity.ok(team);

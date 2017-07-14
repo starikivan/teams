@@ -62,7 +62,7 @@ public class TeamsControllerTest {
     public void addTeam() throws Exception {
         //Given
         String jsonContentRequest = new String(Files.readAllBytes(Paths.get(addTeamJsonFile.getURI())), StandardCharsets.UTF_8);
-        final String someId = "SomeId";
+        final Team team=new Team("","","","");
         final String expectedId = "[\"SomeId\"]";
         //When
         when(teamService.addTeam(any(TeamRequest.class))).thenReturn(someId);

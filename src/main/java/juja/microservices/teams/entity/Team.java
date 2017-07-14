@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -17,14 +16,12 @@ import java.util.Date;
  * @author Andrii.Sidun
  * @author Ivan Shapovalov
  */
-
 @Getter
 @ToString
 public class Team {
 
     @Id
     private String id;
-    private String from;
     private String uuidOne;
     private String uuidTwo;
     private String uuidThree;
@@ -39,12 +36,10 @@ public class Team {
     private Date dismissDate;
 
     @JsonCreator
-    public Team(@JsonProperty("from") String from,
-                @JsonProperty("uuidOne") String uuidOne,
+    public Team(                @JsonProperty("uuidOne") String uuidOne,
                 @JsonProperty("uuidTwo") String uuidTwo,
                 @JsonProperty("uuidThree") String uuidThree,
                 @JsonProperty("uuidFour") String uuidFour) {
-        this.from = from;
         this.uuidOne = uuidOne;
         this.uuidTwo = uuidTwo;
         this.uuidThree = uuidThree;
@@ -69,5 +64,4 @@ public class Team {
                 .concat("uuidThree = ").concat(uuidThree).concat(lineSeparator)
                 .concat("uuidFour = ").concat(uuidFour).concat(lineSeparator);
     }
-
 }
