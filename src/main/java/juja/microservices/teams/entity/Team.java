@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
@@ -18,30 +17,34 @@ import java.util.Date;
  * @author Andrii.Sidun
  * @author Ivan Shapovalov
  */
+
 @Getter
-@Setter
+@ToString
 public class Team {
 
     @Id
     private String id;
+    private String from;
     private String uuidOne;
     private String uuidTwo;
     private String uuidThree;
     private String uuidFour;
 
     @JsonProperty("startDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date startDate;
 
     @JsonProperty("dismissDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date dismissDate;
 
     @JsonCreator
-    public Team(@JsonProperty("uuidOne") String uuidOne,
+    public Team(@JsonProperty("from") String from,
+                @JsonProperty("uuidOne") String uuidOne,
                 @JsonProperty("uuidTwo") String uuidTwo,
                 @JsonProperty("uuidThree") String uuidThree,
                 @JsonProperty("uuidFour") String uuidFour) {
+        this.from = from;
         this.uuidOne = uuidOne;
         this.uuidTwo = uuidTwo;
         this.uuidThree = uuidThree;

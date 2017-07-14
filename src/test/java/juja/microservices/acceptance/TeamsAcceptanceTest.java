@@ -2,6 +2,12 @@ package juja.microservices.acceptance;
 
 import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
 import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
+import com.mongodb.util.JSON;
+import io.restassured.response.Response;
+import net.javacrumbs.jsonunit.core.Option;
+import org.eclipse.jetty.http.HttpMethod;
+import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
+import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
 import io.restassured.response.Response;
 import net.javacrumbs.jsonunit.core.Option;
 import org.eclipse.jetty.http.HttpMethod;
@@ -21,8 +27,25 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest{
     @Value( "${rest.api.version}" )
     private String restApiVersion;
 
+    @UsingDataSet(locations = "/datasets/oneTeamInDB.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
+    public void addTeam() throws IOException {
+
+        //Given
+        String jsonContentRequest = convertToString(resource("acceptance/request/addTeam.json"));
+        String jsonContentControlResponse = convertToString(
+                resource("acceptance/response/responseAddExistedUserException.json"));
+
+        //When
+        Response actualResponse = getRealResponse("/" + restApiVersion + "/teams/" + restApiVersion, jsonContentRequest, HttpMethod.POST);
+
+        //Then
+        String result = actualResponse.asString();
+        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isNotEqualTo(jsonContentControlResponse);
+    }
+
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @Test
     public void test_deactivateTeamUserInTeamExecutedCorrectly() throws IOException {
 
         String uuid="user-in-one-team";
@@ -39,5 +62,4 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest{
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isNotEqualTo(jsonContentControlResponse);
 
     }
-
 }
