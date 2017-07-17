@@ -1,5 +1,5 @@
 {
-  "httpStatus": 200,
+  "httpStatus": 400,
   "internalErrorCode": "TMF-F1-D3",
   "clientMessage": "Sorry, but the user exists in a other team",
   "developerMessage": "Exception - UserExistsException",

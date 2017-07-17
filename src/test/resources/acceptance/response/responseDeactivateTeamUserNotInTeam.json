@@ -1,8 +1,0 @@
-{
-  "httpStatus": 400,
-  "internalErrorCode": "TMF-F1-D2",
-  "clientMessage": "Sorry, but the user not in team now",
-  "developerMessage": "Exception - UserNotInTeamException",
-  "exceptionMessage": "Some user(s) not in a team",
-  "detailErrors": []
-}

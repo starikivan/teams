@@ -50,7 +50,7 @@ public class TeamControllerTest {
     @MockBean
     private TeamService teamService;
 
-    @Value("classpath:/acceptance/request/addTeam.json")
+    @Value("classpath:/acceptance/request/requestAddTeamIfUserInActiveTeamThrowsExceptions.json")
     private Resource addTeamJsonFile;
 
     @Test

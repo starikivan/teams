@@ -24,7 +24,7 @@ public class TeamDTO {
 
     @JsonProperty ("activateDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date activatetDate;
+    private Date activateDate;
 
     @JsonProperty("deactivateDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
@@ -32,20 +32,10 @@ public class TeamDTO {
 
     public TeamDTO(Team team) {
         this.members = new HashSet<>(team.getMembers());
-        this.activatetDate= team.getActivatetDate();
+        this.activateDate = team.getActivateDate();
         this.deactivateDate= team.getDeactivateDate();
+        System.out.println("");
     }
 
-    @Override
-    public String toString() {
-        String json;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            json = mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            log.warn("Convert TeamDTO failed. TeamDTO <{}>", this.getMembers());
-            throw new TeamsException(String.format("Convert TeamDTO failed. TeamDTO members '%s'",members));
-        }
-        return json;
-    }
+
 }

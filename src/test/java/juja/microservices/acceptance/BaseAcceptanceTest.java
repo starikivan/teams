@@ -9,6 +9,7 @@ import juja.microservices.teams.Teams;
 import org.eclipse.jetty.http.HttpMethod;
 import org.junit.Before;
 import org.junit.Rule;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;

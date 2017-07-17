@@ -1,0 +1,10 @@
+{
+  "members": [
+    "user1",
+    "user-in-one-team",
+    "user2",
+    "user-in-several-teams"
+  ],
+  "activateDate": "2017-04-01",
+  "deactivateDate": "2017-07-16"
+}

@@ -51,7 +51,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeam_userInAnotherTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeam_userInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserInAnotherTeamsThrowsExeption(){
         String uuid="user-in-several-teams";
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));

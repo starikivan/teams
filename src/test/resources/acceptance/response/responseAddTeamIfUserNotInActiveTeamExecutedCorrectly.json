@@ -1,0 +1,10 @@
+{
+  "members": [
+    "user400",
+    "user100",
+    "user200",
+    "user300"
+  ],
+  "activateDate": "%s",
+  "deactivateDate": "%s"
+}

@@ -29,7 +29,8 @@ public class TeamController {
         Team team = teamService.addTeam(request);
         log.info("New team added. Id: {}", team.getId());
         log.debug("Request 'Add team' returned {}", team);
-        return ResponseEntity.ok(new TeamDTO(team));
+        TeamDTO teamDTO=new TeamDTO(team);
+        return ResponseEntity.ok(teamDTO);
     }
 
     @PutMapping(value = "/users/{uuid}", produces = "application/json")
