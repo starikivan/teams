@@ -4,12 +4,12 @@ import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
 import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
 import juja.microservices.teams.dao.TeamRepository;
 import juja.microservices.teams.entity.Team;
-import juja.microservices.teams.entity.TeamDTO;
 import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.exceptions.UserExistsException;
 import juja.microservices.teams.service.TeamService;
 import juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import juja.microservices.teams.exceptions.UserNotInTeamException;
+import net.javacrumbs.jsonunit.core.Option;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -43,17 +44,18 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/addTeam_userNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly(){
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
-        TeamDTO expected = new TeamDTO(new Team(teamRequest.getMembers()));
+        Team expected = new Team(teamRequest.getMembers());
 
         Team actual= teamService.addTeam(teamRequest);
+        expected.setId(actual.getId());
+        assertThatJson(actual.toJSON()).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expected.toJSON());
 
-        assertEquals(expected.toString(), new TeamDTO(actual).toString());
-    }
+   }
 
     @Test
     @UsingDataSet(locations = "/datasets/addTeam_userInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserInAnotherTeamsThrowsExeption(){
-        String uuid="user-in-several-teams";
+        String uuid="user-in-team";
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
 
         expectedException.expect(UserExistsException.class);

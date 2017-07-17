@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +30,7 @@ public class TeamRepository {
 
     public List<Team> getUserTeams(String uuid) {
         log.debug("Started 'Get user teams' '{}' from DB at current date", uuid);
-        Date currentDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date currentDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(currentDate)
                 .and("members").is(uuid)
         ), Team.class);

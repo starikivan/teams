@@ -10,7 +10,7 @@ import juja.microservices.teams.exceptions.UserNotInTeamException;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,10 +34,10 @@ public class TeamService {
         }
         Team team = mappingRequestToTeam(teamRequest);
         log.debug("Started 'Save team '{}'", team);
-        teamRepository.saveTeam(team);
+        Team savedTeam=teamRepository.saveTeam(team);
         log.info("Finished 'Save team' '{}'", team.getId());
         log.debug("Finished 'Save team '{}'", team);
-        return team;
+        return savedTeam;
     }
 
     private Team mappingRequestToTeam(TeamRequest teamRequest) {
@@ -65,7 +65,7 @@ public class TeamService {
         log.debug("Finished 'usersInCurrentTeams' with uuid '{}'. Teams ",uuid,teams.toString());
         if (teams.size() == 1) {
             Team team = teams.get(0);
-            team.setDeactivateDate(LocalDate.now());
+            team.setDeactivateDate(LocalDateTime.now());
             return teamRepository.saveTeam(team);
         } else if (teams.size() == 0) {
             log.warn("User <{}> is not in the team now", uuid);

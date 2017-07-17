@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
@@ -105,7 +105,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final String userInOneTeam = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserTeams(userInOneTeam);
         assertEquals(1,teamsBefore.size());
-        teamsBefore.get(0).setDeactivateDate(LocalDate.now());
+        teamsBefore.get(0).setDeactivateDate(LocalDateTime.now());
 
         teamRepository.saveTeam(teamsBefore.get(0));
         List<Team> teamsAfter = teamRepository.getUserTeams(userInOneTeam);

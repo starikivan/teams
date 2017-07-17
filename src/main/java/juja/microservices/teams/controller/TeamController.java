@@ -1,7 +1,6 @@
 package juja.microservices.teams.controller;
 
 import juja.microservices.teams.entity.Team;
-import juja.microservices.teams.entity.TeamDTO;
 import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +28,7 @@ public class TeamController {
         Team team = teamService.addTeam(request);
         log.info("New team added. Id: {}", team.getId());
         log.debug("Request 'Add team' returned {}", team);
-        TeamDTO teamDTO=new TeamDTO(team);
-        return ResponseEntity.ok(teamDTO);
+        return ResponseEntity.ok(team);
     }
 
     @PutMapping(value = "/users/{uuid}", produces = "application/json")
@@ -39,7 +37,7 @@ public class TeamController {
         Team team= teamService.deactivateTeam(uuid);
         log.info("Team deacticated. Team Id: {}", team.getId());
         log.debug("Request 'Deactivate team' returned team {}", team);
-        return ResponseEntity.ok(new TeamDTO(team));
+        return ResponseEntity.ok(team);
     }
 
     @GetMapping(value = "", produces = "application/json")

@@ -1,7 +1,6 @@
 package juja.microservices.teams.controller;
 
 import juja.microservices.teams.entity.Team;
-import juja.microservices.teams.entity.TeamDTO;
 import juja.microservices.teams.entity.TeamRequest;
 import juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import juja.microservices.teams.exceptions.UserNotInTeamException;
@@ -67,7 +66,7 @@ public class TeamControllerTest {
 
         verify(teamService).addTeam(any(TeamRequest.class));
         verifyNoMoreInteractions(teamService);
-        assertEquals(new TeamDTO(team).toString(), result);
+        assertEquals(team.toJSON(), result);
     }
 
     @Test
@@ -81,7 +80,7 @@ public class TeamControllerTest {
 
         verify(teamService).deactivateTeam(uuid);
         verifyNoMoreInteractions(teamService);
-        assertEquals(new TeamDTO(team).toString(), result);
+        assertEquals(team.toJSON(), result);
     }
 
     @Test
