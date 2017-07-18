@@ -4,17 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
+
 import juja.microservices.teams.exceptions.TeamsException;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.Date;
 import java.util.Set;
 
@@ -33,23 +31,18 @@ public class Team {
     private Set<String> members;
 
     @JsonProperty("activateDate")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:00:00")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     private Date activateDate;
 
     @JsonProperty("deactivateDate")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:00:00")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     private Date deactivateDate;
 
     @JsonCreator
     public Team(@JsonProperty("members") Set<String> members) {
         this.members = members;
-        this.activateDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
-        this.deactivateDate = Date.from(LocalDateTime.now().plusMonths(1).minusSeconds(1)
-               .toInstant(ZoneOffset.UTC));
-    }
-
-    public void setDeactivateDate(LocalDateTime ldt) {
-        this.deactivateDate = Date.from(ldt.toInstant(ZoneOffset.UTC));
+        this.activateDate = Date.from(LocalDateTime.of(LocalDate.now(), LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant());
+        this.deactivateDate = Date.from(LocalDateTime.of(LocalDate.now().plusMonths(1).minusDays(1), LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public String toJSON() {
@@ -59,8 +52,9 @@ public class Team {
             json = mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             log.warn("Convert Team failed. Team <{}>", this.getMembers());
-            throw new TeamsException(String.format("Convert Team failed. Team members '%s'",members));
+            throw new TeamsException(String.format("Convert Team failed. Team members '%s'", members));
         }
         return json;
     }
+
 }

@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
@@ -28,6 +28,8 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
 
     @Inject
     private TeamRepository teamRepository;
+
+    private final Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
     @Test
     public void test_saveTeamExecutedCorrectly(){
@@ -52,7 +54,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final List<Team> expected = new ArrayList<>();
         expected.add(team);
 
-        List<Team> actual = teamRepository.getUserTeams(userInOneTeam);
+        List<Team> actual = teamRepository.getUserActiveTeams(userInOneTeam,actualDate);
 
         assertEquals(actual.size(),1);
         assertThat(actual.get(0).getMembers(), is(team.getMembers()));
@@ -69,9 +71,9 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         expected.add(team1);
         expected.add(team2);
 
-        List<Team> actual = teamRepository.getUserTeams(userInSeveralTeams);
+        List<Team> actual = teamRepository.getUserActiveTeams(userInSeveralTeams, actualDate);
 
-        assertEquals(actual.size(),expected.size());
+        assertEquals(actual.size(), expected.size());
         for (int i = 0; i < actual.size(); i++) {
             assertThat(actual.get(i).getMembers(), is(expected.get(i).getMembers()));
         }
@@ -83,7 +85,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final String userNotInTeam = "user-not-in-team";
         final List<Team> expected = new ArrayList<>();
 
-        List<Team> actual = teamRepository.getUserTeams(userNotInTeam);
+        List<Team> actual = teamRepository.getUserActiveTeams(userNotInTeam,actualDate);
 
         assertEquals(expected.toString(), actual.toString());
     }
@@ -94,7 +96,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final String userInDeactivatedTeam = "user-in-deactivated-team";
         final List<Team> expected = new ArrayList<>();
 
-        List<Team> actual = teamRepository.getUserTeams(userInDeactivatedTeam);
+        List<Team> actual = teamRepository.getUserActiveTeams(userInDeactivatedTeam,actualDate);
 
         assertEquals(expected.toString(),actual.toString());
     }
@@ -103,13 +105,15 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json",loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_deactivateTeamExecutedCorrectly() {
         final String userInOneTeam = "user-in-one-team";
-        List<Team> teamsBefore = teamRepository.getUserTeams(userInOneTeam);
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(userInOneTeam,actualDate);
         assertEquals(1,teamsBefore.size());
-        teamsBefore.get(0).setDeactivateDate(LocalDateTime.now());
+        teamsBefore.get(0).setDeactivateDate(Date.from(Instant.now()));
 
         teamRepository.saveTeam(teamsBefore.get(0));
-        List<Team> teamsAfter = teamRepository.getUserTeams(userInOneTeam);
+        List<Team> teamsAfter = teamRepository.getUserActiveTeams(userInOneTeam,actualDate);
 
         assertEquals(0,teamsAfter.size());
     }
+
+
 }

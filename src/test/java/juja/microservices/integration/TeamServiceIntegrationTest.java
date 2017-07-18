@@ -18,7 +18,10 @@ import org.junit.rules.ExpectedException;
 
 import javax.inject.Inject;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,26 +43,27 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Inject
     private TeamService teamService;
 
+    private final Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+
     @Test
     @UsingDataSet(locations = "/datasets/addTeam_userNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly(){
+    public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
         Team expected = new Team(teamRequest.getMembers());
 
-        Team actual= teamService.addTeam(teamRequest);
+        Team actual = teamService.addTeam(teamRequest);
         expected.setId(actual.getId());
-        assertThatJson(actual.toJSON()).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expected.toJSON());
-
-   }
+        assertThatJson(actual).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expected);
+    }
 
     @Test
     @UsingDataSet(locations = "/datasets/addTeam_userInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_addTeamIfUserInAnotherTeamsThrowsExeption(){
-        String uuid="user-in-team";
+    public void test_addTeamIfUserInAnotherTeamsThrowsExeption() {
+        String uuid = "user-in-team";
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
 
         expectedException.expect(UserExistsException.class);
-        expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", "["+uuid+"]"));
+        expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", "[" + uuid + "]"));
 
         teamService.addTeam(teamRequest);
     }
@@ -68,11 +72,12 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
     public void test_deactivateTeamIfUserInTeamExecutedCorrectly() {
         final String uuid = "user-in-one-team";
-
-        List<Team> teamsBefore = teamRepository.getUserTeams(uuid);
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
+
         teamService.deactivateTeam(uuid);
-        List<Team> teamsAfter = teamRepository.getUserTeams(uuid);
+
+        List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsAfter.size());
     }
 
@@ -80,11 +85,10 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
     public void test_deactivateTeamIfUserNotInTeamExecutedCorrectly() {
         final String uuid = "user-not-in-team";
-
-        List<Team> teamsBefore = teamRepository.getUserTeams(uuid);
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsBefore.size());
         expectedException.expect(UserNotInTeamException.class);
-        expectedException.expectMessage(String.format("User with uuid '%s' not in team now",uuid));
+        expectedException.expectMessage(String.format("User with uuid '%s' not in team now", uuid));
         teamService.deactivateTeam(uuid);
     }
 
@@ -93,7 +97,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     public void test_deactivateTeamIfUserInSeveralTeamsExecutedCorrectly() {
         final String uuid = "user-in-several-teams";
 
-        List<Team> teamsBefore = teamRepository.getUserTeams(uuid);
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(2, teamsBefore.size());
 
         expectedException.expect(UserInSeveralTeamsException.class);

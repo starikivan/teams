@@ -22,7 +22,7 @@ public class TeamController {
     @Inject
     private TeamService teamService;
 
-    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
         log.debug("Received 'Add team' request {}", request);
         Team team = teamService.addTeam(request);
@@ -34,21 +34,24 @@ public class TeamController {
     @PutMapping(value = "/users/{uuid}", produces = "application/json")
     public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
         log.debug("Received 'Deactivate team' request. Deactivate team of user {}", uuid);
-        Team team= teamService.deactivateTeam(uuid);
+        Team team = teamService.deactivateTeam(uuid);
         log.info("Team deacticated. Team Id: {}", team.getId());
         log.debug("Request 'Deactivate team' returned team {}", team);
         return ResponseEntity.ok(team);
     }
 
-    @GetMapping(value = "", produces = "application/json")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<?> getAllActiveTeams() {
         //TODO Should be implemented feature TMF-F3
         return null;
     }
 
     @GetMapping(value = "/users/{uuid}", produces = "application/json")
-    public ResponseEntity<?> getTeamById(@PathVariable String id) {
-        //TODO Should be implemented feature TMF-F4 - TMF-F5
-        return null;
+    public ResponseEntity<?> getTeamByUuid(@PathVariable String uuid) {
+        log.debug("Received 'Get team' request. Get team team of user {}", uuid);
+        Team team = teamService.getUserActiveTeam(uuid);
+        log.info("Team content received. Team Id: {}", team.getId());
+        log.debug("Request 'Get team' returned team {}", team);
+        return ResponseEntity.ok(team);
     }
 }

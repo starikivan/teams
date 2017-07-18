@@ -47,12 +47,12 @@ public class TeamServiceTest {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
         Team expected = new Team(teamRequest.getMembers());
         List<Team> userInTeams = new ArrayList();
-        when(teamRepository.getUserTeams(anyString())).thenReturn(userInTeams);
+        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(userInTeams);
         when(teamRepository.saveTeam(any(Team.class))).thenReturn(expected);
 
         Team actual = teamService.addTeam(teamRequest);
 
-        verify(teamRepository, atLeast(4)).getUserTeams(anyString());
+        verify(teamRepository, atLeast(4)).getUserActiveTeams(anyString(), anyObject());
         verify(teamRepository).saveTeam(any(Team.class));
         verifyNoMoreInteractions(teamRepository);
         assertEquals(expected.getMembers(), actual.getMembers());
@@ -63,7 +63,7 @@ public class TeamServiceTest {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
 
         List<Team> userInTeams = new ArrayList(Arrays.asList(new Team(new HashSet<>(Arrays.asList("user1")))));
-        when(teamRepository.getUserTeams(anyString())).thenReturn(userInTeams);
+        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(userInTeams);
         teamService.addTeam(teamRequest);
     }
 
@@ -76,13 +76,13 @@ public class TeamServiceTest {
         teams.add(team1);
         teams.add(team2);
 
-        when(teamRepository.getUserTeams(uuid)).thenReturn(teams);
+        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(teams);
 
         expectedException.expect(UserInSeveralTeamsException.class);
         expectedException.expectMessage(String.format("User with uuid '%s' is in several teams now", uuid));
 
         teamService.deactivateTeam(uuid);
-        verify(teamRepository).getUserTeams(uuid);
+        verify(teamRepository).getUserActiveTeams(anyString(), anyObject());
         verifyNoMoreInteractions(teamRepository);
     }
 
@@ -90,13 +90,13 @@ public class TeamServiceTest {
     public void test_deactivateTeamIfUserNotInTeamThrowsException() {
         final String uuid = "user-not-in-team";
         List<Team> teams = new ArrayList<>();
-        when(teamRepository.getUserTeams(uuid)).thenReturn(teams);
+        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(teams);
 
         expectedException.expect(UserNotInTeamException.class);
         expectedException.expectMessage(String.format("User with uuid '%s' not in team now", uuid));
 
         teamService.deactivateTeam(uuid);
-        verify(teamRepository).getUserTeams(uuid);
+        verify(teamRepository).getUserActiveTeams(anyString(), anyObject());
         verifyNoMoreInteractions(teamRepository);
     }
 
@@ -107,11 +107,11 @@ public class TeamServiceTest {
         List<Team> teams = new ArrayList<>();
         teams.add(team);
 
-        when(teamRepository.getUserTeams(uuid)).thenReturn(teams);
+        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(teams);
         when(teamRepository.saveTeam(team)).thenReturn(team);
         teamService.deactivateTeam(uuid);
 
-        verify(teamRepository).getUserTeams(uuid);
+        verify(teamRepository).getUserActiveTeams(anyString(), anyObject());
         verify(teamRepository).saveTeam(team);
         verifyNoMoreInteractions(teamRepository);
     }
