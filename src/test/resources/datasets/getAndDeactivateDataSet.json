@@ -1,0 +1,32 @@
+{
+  "team": [
+    {
+      "members": ["user-in-one-team","user1","user2","user-in-several-teams"],
+      "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-08-31T23:59:59.000Z"}
+    },
+    {
+      "members":["user-in-several-teams","user3","user4","user5"],
+      "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-08-30T23:59:59.000Z"}
+    },
+    {
+      "members":["user-in-several-teams","user-in-one-team","user7"],
+      "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-05-30T23:59:59.000Z"}
+    },
+    {
+      "members":["user-in-deactivated-team","user8","user9","user10"],
+      "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-04-30T23:59:59.000Z"}
+    },   {
+      "members":["user-in-deactivated-team","user7","user-in-one-team","user10"],
+      "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-06-30T23:59:59.000Z"}
+    },  {
+      "members":["user-in-deactivated-team","user7","user-in-one-team","user-in-several-teams"],
+      "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
+      "deactivateDate":{ "$date" : "2017-04-15T23:59:59.000Z"}
+    }
+  ]
+}
