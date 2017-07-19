@@ -18,6 +18,7 @@ import org.junit.rules.ExpectedException;
 
 import javax.inject.Inject;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -69,7 +70,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getTeamIfUserInTeamExecutedCorrectly() {
-        Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        Date actualDate = Date.from(Instant.now());
         final String uuid = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
@@ -81,7 +82,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getTeamIfUserNotInTeamExecutedCorrectly() {
-        Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        Date actualDate = Date.from(Instant.now());
         final String uuid = "user-not-in-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsBefore.size());
@@ -93,7 +94,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getTeamIfUserInSeveralTeamsExecutedCorrectly() {
-        Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        Date actualDate = Date.from(Instant.now());
         final String uuid = "user-in-several-teams";
 
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
@@ -107,13 +108,13 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_deactivateTeamIfUserInTeamExecutedCorrectly() {
-        Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        Date actualDate = Date.from(Instant.now());
         final String uuid = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
 
         teamService.deactivateTeam(uuid);
-        actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        actualDate = Date.from(Instant.now());
         List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsAfter.size());
     }

@@ -29,8 +29,6 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Inject
     private TeamRepository teamRepository;
 
-    private final Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
-
     @Test
     public void test_saveTeamExecutedCorrectly(){
         final String userInOneTeam = "user-in-one-team";
@@ -46,6 +44,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getUserTeamsUserInOneTeamExecutedCorrectly() {
+        Date actualDate = Date.from(Instant.now());
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
         final Team expected = new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
@@ -59,6 +58,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json",loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_getUserTeamsIfUserInSeveralTeamsExecutedCorrectly() {
+        Date actualDate = Date.from(Instant.now());
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
         final Team team1 = new Team(new LinkedHashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
@@ -78,6 +78,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json",loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_getUserTeamsIfUserNotInTeamExecutedCorrectly() {
+        Date actualDate = Date.from(Instant.now());
         final String userNotInTeam = "user-not-in-team";
         final List<Team> expected = new ArrayList<>();
 
@@ -89,6 +90,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json",loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_getUserTeamsIfUserInDeactivatedTeamsExecutedCorrectly() {
+        Date actualDate = Date.from(Instant.now());
         final String userInDeactivatedTeam = "user-in-deactivated-team";
         final List<Team> expected = new ArrayList<>();
 
@@ -100,13 +102,15 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json",loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_deactivateTeamExecutedCorrectly() {
+        Date actualDate = Date.from(Instant.now());
         final String userInOneTeam = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(userInOneTeam,actualDate);
         assertEquals(1,teamsBefore.size());
         teamsBefore.get(0).setDeactivateDate(Date.from(Instant.now()));
 
+        Date newDate = Date.from(Instant.now());
         teamRepository.saveTeam(teamsBefore.get(0));
-        List<Team> teamsAfter = teamRepository.getUserActiveTeams(userInOneTeam,actualDate);
+        List<Team> teamsAfter = teamRepository.getUserActiveTeams(userInOneTeam,newDate);
 
         assertEquals(0,teamsAfter.size());
     }
@@ -114,6 +118,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_checkUsersActiveTeamsSomeUserInSeveralTeamsExecutedCorrectly() {
+        Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
         Set<String> members=new HashSet<>();
@@ -132,6 +137,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_checkUsersActiveTeamsNoOneInSeveralTeamsReturnsEmptyList() {
+        Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
         final String userNotOneTeam = "user-not-in-team";
         Set<String> members=new HashSet<>();
         members.add(userNotOneTeam);
