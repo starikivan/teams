@@ -3,52 +3,46 @@ package juja.microservices.teams.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Andrii.Sidun
+ * @author Ivan Shapovalov
  */
-
-@Getter
+@Data
 @ToString
 public class Team {
 
     @Id
     private String id;
-    private String from;
-    private String uuidOne;
-    private String uuidTwo;
-    private String uuidThree;
-    private String uuidFour;
+    private Set<String> members;
 
-    @JsonProperty("startDate")
+    @JsonProperty("activatetDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date startDate;
+    private Date activatetDate;
 
-    @JsonProperty("dismissDate")
+    @JsonProperty("deactivateDate")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date dismissDate;
+    private Date deactivateDate;
 
     @JsonCreator
-    public Team(@JsonProperty("from") String from,
-                @JsonProperty("uuidOne") String uuidOne,
-                @JsonProperty("uuidTwo") String uuidTwo,
-                @JsonProperty("uuidThree") String uuidThree,
-                @JsonProperty("uuidFour") String uuidFour) {
-        this.from = from;
-        this.uuidOne = uuidOne;
-        this.uuidTwo = uuidTwo;
-        this.uuidThree = uuidThree;
-        this.uuidFour = uuidFour;
-        this.startDate = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startDate);
-        cal.add(Calendar.MONTH, 1);
-        dismissDate = Date.from(cal.toInstant());
+    public Team(@JsonProperty("members") Set<String> members) {
+        this.members = members;
+        this.activatetDate = Date.from(LocalDate.now().
+                atStartOfDay(ZoneId.systemDefault()).toInstant());
+        this.deactivateDate = Date.from(LocalDate.now().plusMonths(1)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public void setDeactivateDate(LocalDate deactivateDate) {
+        this.deactivateDate = Date.from(deactivateDate.
+                atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

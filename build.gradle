@@ -15,6 +15,12 @@ apply plugin: 'spring-boot'
 group = 'ua.com.juja'
 version = '1.0-SNAPSHOT'
 
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
 jar {
     baseName = "teams"
     version = "0.1.0"

@@ -6,35 +6,21 @@ import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.Set;
+
 /**
  * @author Andrii.Sidun
+ * @author Ivan Shapovalov
  */
-
 @Getter
 @ToString
 public class TeamRequest {
 
     @NotEmpty
-    private String from;
-    @NotEmpty
-    private String uuidOne;
-    @NotEmpty
-    private String uuidTwo;
-    @NotEmpty
-    private String uuidThree;
-    @NotEmpty
-    private String uuidFour;
+    private Set<String> members;
 
     @JsonCreator
-    public TeamRequest(@JsonProperty("from") String from,
-                       @JsonProperty("uuidOne") String uuidOne,
-                       @JsonProperty("uuidTwo") String uuidTwo,
-                       @JsonProperty("uuidThree") String uuidThree,
-                       @JsonProperty("uuidFour") String uuidFour) {
-        this.from = from;
-        this.uuidOne = uuidOne;
-        this.uuidTwo = uuidTwo;
-        this.uuidThree = uuidThree;
-        this.uuidFour = uuidFour;
+    public TeamRequest(@JsonProperty("members") Set<String> members) {
+        this.members = members;
     }
 }
