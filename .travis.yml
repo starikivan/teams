@@ -19,4 +19,3 @@ script:
   - ./gradlew test
   - ./gradlew test --tests "ua.com.juja.microservices.integration.*"
   - ./gradlew test --tests "ua.com.juja.microservices.acceptance.*"
-  
