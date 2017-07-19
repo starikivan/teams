@@ -109,7 +109,7 @@ public class TeamControllerTest {
         final Team team = new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
 
         when(teamService.deactivateTeam(uuid)).thenReturn(team);
-        String result = getGoodResult(TEAMS_DEACTIVATE_TEAM_URL + uuid,HttpMethod.PUT);
+        String result = getGoodResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
 
         verify(teamService).deactivateTeam(uuid);
         verifyNoMoreInteractions(teamService);
@@ -141,7 +141,7 @@ public class TeamControllerTest {
                 "'%s' not in team now", uuid)));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid,HttpMethod.GET);
+        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.GET);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
 
@@ -156,7 +156,7 @@ public class TeamControllerTest {
                 "'%s' not in team now", uuid)));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid,HttpMethod.PUT);
+        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
 
@@ -170,7 +170,7 @@ public class TeamControllerTest {
                 .thenThrow(new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid)));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid,HttpMethod.PUT);
+        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
 
     }
