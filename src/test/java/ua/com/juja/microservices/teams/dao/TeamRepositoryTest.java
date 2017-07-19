@@ -142,5 +142,4 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         assertEquals(actual.size(),0);
         assertThat(actual, is(expected));
     }
-
 }

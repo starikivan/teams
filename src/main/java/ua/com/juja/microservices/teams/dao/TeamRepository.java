@@ -65,8 +65,7 @@ public class TeamRepository {
             log.debug("Finished 'checkUsersActiveTeams '{}' from DB at date '{}'. Teams is empty", members.toArray(), actualDate);
             return new ArrayList<>();
         } else {
-            List<String> users = usersInActiveTeams.stream().map(User::getName).collect(Collectors.toList
-                    ());
+            List<String> users = usersInActiveTeams.stream().map(User::getName).collect(Collectors.toList());
             Collections.sort(users);
             log.debug("Finished 'checkUsersActiveTeams '{}' teams' from DB at date '{}'. Users in active teams <{}>",
                     members.toArray(), actualDate, users.toArray());
@@ -85,5 +84,4 @@ public class TeamRepository {
     private class User {
         public String name;
     }
-
 }

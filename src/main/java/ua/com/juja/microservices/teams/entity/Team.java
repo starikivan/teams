@@ -56,5 +56,4 @@ public class Team {
         }
         return json;
     }
-
 }

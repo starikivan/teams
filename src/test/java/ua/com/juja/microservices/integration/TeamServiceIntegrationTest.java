@@ -70,6 +70,41 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
+    public void test_getTeamIfUserInTeamExecutedCorrectly() {
+        final String uuid = "user-in-one-team";
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
+        assertEquals(1, teamsBefore.size());
+
+        Team teamsAfter = teamService.getUserActiveTeam(uuid);
+        assertEquals(teamsAfter, teamsBefore.get(0));
+    }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
+    public void test_getTeamIfUserNotInTeamExecutedCorrectly() {
+        final String uuid = "user-not-in-team";
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
+        assertEquals(0, teamsBefore.size());
+        expectedException.expect(UserNotInTeamException.class);
+        expectedException.expectMessage(String.format("User with uuid '%s' not in team now", uuid));
+        teamService.getUserActiveTeam(uuid);
+    }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
+    public void test_getTeamIfUserInSeveralTeamsExecutedCorrectly() {
+        final String uuid = "user-in-several-teams";
+
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
+        assertEquals(2, teamsBefore.size());
+
+        expectedException.expect(UserInSeveralTeamsException.class);
+        expectedException.expectMessage(String.format("User with uuid '%s' is in several teams now", uuid));
+        teamService.getUserActiveTeam(uuid);
+    }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_deactivateTeamIfUserInTeamExecutedCorrectly() {
         final String uuid = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
@@ -79,29 +114,5 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
 
         List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsAfter.size());
-    }
-
-    @Test
-    @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_deactivateTeamIfUserNotInTeamExecutedCorrectly() {
-        final String uuid = "user-not-in-team";
-        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
-        assertEquals(0, teamsBefore.size());
-        expectedException.expect(UserNotInTeamException.class);
-        expectedException.expectMessage(String.format("User with uuid '%s' not in team now", uuid));
-        teamService.deactivateTeam(uuid);
-    }
-
-    @Test
-    @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_deactivateTeamIfUserInSeveralTeamsExecutedCorrectly() {
-        final String uuid = "user-in-several-teams";
-
-        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
-        assertEquals(2, teamsBefore.size());
-
-        expectedException.expect(UserInSeveralTeamsException.class);
-        expectedException.expectMessage(String.format("User with uuid '%s' is in several teams now", uuid));
-        teamService.deactivateTeam(uuid);
     }
 }

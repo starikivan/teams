@@ -167,7 +167,4 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         String result = actualResponse.asString();
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
-
-
-
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * @author  Ivan Shapovalov
+ * @author Ivan Shapovalov
  */
 public class Utils {
 
@@ -17,5 +17,4 @@ public class Utils {
         }
         return buffer.toString();
     }
-
 }
