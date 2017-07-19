@@ -115,5 +115,37 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         assertEquals(0,teamsAfter.size());
     }
 
+    @Test
+    @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
+    public void test_checkUsersActiveTeamsSomeUserInSeveralTeamsExecutedCorrectly() {
+        final String userInOneTeam = "user-in-one-team";
+        final String userInSeveralTeams = "user-in-several-teams";
+        Set<String> members=new HashSet<>();
+        members.add(userInOneTeam);
+        members.add(userInSeveralTeams);
+        final List<String> expected = new ArrayList<>();
+        expected.add(userInSeveralTeams);
+        expected.add(userInOneTeam);
+
+        List<String> actual = teamRepository.checkUsersActiveTeams(members,actualDate);
+
+        assertEquals(actual.size(),2);
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/deactivateTeam_dataSet.json")
+    public void test_checkUsersActiveTeamsNoOneInSeveralTeamsReturnsEmptyList() {
+        final String userNotOneTeam = "user-not-in-team";
+        Set<String> members=new HashSet<>();
+        members.add(userNotOneTeam);
+        final List<String> expected = new ArrayList<>();
+
+        List<String> actual = teamRepository.checkUsersActiveTeams(members,actualDate);
+
+        assertEquals(actual.size(),0);
+        assertThat(actual, is(expected));
+    }
+
 
 }

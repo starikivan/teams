@@ -14,9 +14,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Andrii.Sidun
@@ -30,7 +28,8 @@ public class TeamService {
 
     public Team addTeam(TeamRequest teamRequest) {
         log.debug("Started 'addTeam' TeamRequest: {}", teamRequest);
-        Set<String> usersInTeams = usersInCurrentTeams(teamRequest);
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        List<String> usersInTeams = teamRepository.checkUsersActiveTeams(teamRequest.getMembers(), actualDate);
         if (usersInTeams.size() > 0) {
             log.warn("User(s) '{}' exists in a another teams", usersInTeams);
             throw new UserExistsException(String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
@@ -45,21 +44,6 @@ public class TeamService {
 
     private Team mappingRequestToTeam(TeamRequest teamRequest) {
         return new Team(teamRequest.getMembers());
-    }
-
-    private Set<String> usersInCurrentTeams(TeamRequest teamRequest) {
-        log.debug("Started 'usersInCurrentTeams' with teamRequest '{}'", teamRequest);
-        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        Set<String> usersInTeams = new HashSet<>();
-        teamRequest.getMembers()
-                .forEach(uuid -> {
-                    List<Team> teams = teamRepository.getUserActiveTeams(uuid, actualDate);
-                    if (teams.size() != 0) {
-                        usersInTeams.add(uuid);
-                    }
-                });
-        log.info("Finished 'usersInCurrentTeams' with teamRequest '{}'", teamRequest);
-        return usersInTeams;
     }
 
     public Team deactivateTeam(String uuid) {
