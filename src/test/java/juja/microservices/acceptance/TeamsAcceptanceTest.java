@@ -7,7 +7,6 @@ import io.restassured.response.Response;
 import juja.microservices.teams.entity.Team;
 import net.javacrumbs.jsonunit.core.Option;
 import org.eclipse.jetty.http.HttpMethod;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         TEAMS_ADD_TEAM_URL = "/" + restApiVersion + "/teams";
     }
 
-    @UsingDataSet(locations = "/datasets/addTeam_userNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
     public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
         String url = TEAMS_ADD_TEAM_URL;
@@ -43,24 +42,20 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
         String result = actualResponse.asString();
 
-        JSONObject jsonObj = new JSONObject(result);
-        String activateDate = jsonObj.getString("activateDate");
-        String deactivateDate = jsonObj.getString("deactivateDate");
-        String jsonContentExpectedResponse = String.format(convertToString(
-                resource("acceptance/response/responseAddTeamIfUserNotInActiveTeamExecutedCorrectly.json")),
-                activateDate, deactivateDate);
+        String jsonContentExpectedResponse = convertToString(
+                resource("acceptance/response/responseAddTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS)
                 .isEqualTo(jsonContentExpectedResponse);
     }
 
-    @UsingDataSet(locations = "/datasets/addTeam_userInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeamIfUsersInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
     public void test_addTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
 
         String url = TEAMS_ADD_TEAM_URL;
-        String jsonContentRequest = convertToString(resource("acceptance/request/requestAddTeamIfUserInActiveTeamThrowsExceptions.json"));
+        String jsonContentRequest = convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
         String jsonContentControlResponse = convertToString(
                 resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
 
@@ -99,7 +94,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
         String uuid = "user-not-in-team";
         String jsonContentExpectedResponse = convertToString(
-                resource("acceptance/response/responseDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
+                resource("acceptance/response/responseDeactivateAndGetTeamIfUserNotInTeamThrowsExeption.json"));
 
         String url = TEAMS_DEACTIVATE_TEAM_URL + uuid;
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);

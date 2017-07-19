@@ -1,8 +1,8 @@
 {
   "httpStatus": 400,
   "internalErrorCode": "TMF-F1-D3",
-  "clientMessage": "Sorry, but the user exists in a other team",
-  "developerMessage": "Exception - UserExistsException",
-  "exceptionMessage": "User(s) '[user-in-team]' exists in a another teams",
+  "clientMessage": "Sorry, but the user already exists in team",
+  "developerMessage": "Exception - UserAlreadyInTeamException",
+  "exceptionMessage": "User(s) '[user-in-team, user-in-team2]' exists in a another teams",
   "detailErrors": []
 }

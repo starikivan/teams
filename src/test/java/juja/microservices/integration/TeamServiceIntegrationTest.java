@@ -5,7 +5,7 @@ import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
 import juja.microservices.teams.dao.TeamRepository;
 import juja.microservices.teams.entity.Team;
 import juja.microservices.teams.entity.TeamRequest;
-import juja.microservices.teams.exceptions.UserExistsException;
+import juja.microservices.teams.exceptions.UserAlreadyInTeamException;
 import juja.microservices.teams.service.TeamService;
 import juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import juja.microservices.teams.exceptions.UserNotInTeamException;
@@ -46,7 +46,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     private final Date actualDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeam_userNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
         Team expected = new Team(teamRequest.getMembers());
@@ -57,12 +57,12 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeam_userInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeamIfUsersInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserInAnotherTeamsThrowsExeption() {
         String uuid = "user-in-team";
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
 
-        expectedException.expect(UserExistsException.class);
+        expectedException.expect(UserAlreadyInTeamException.class);
         expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", "[" + uuid + "]"));
 
         teamService.addTeam(teamRequest);

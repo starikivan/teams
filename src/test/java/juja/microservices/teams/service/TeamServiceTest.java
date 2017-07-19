@@ -3,7 +3,7 @@ package juja.microservices.teams.service;
 import juja.microservices.teams.dao.TeamRepository;
 import juja.microservices.teams.entity.Team;
 import juja.microservices.teams.entity.TeamRequest;
-import juja.microservices.teams.exceptions.UserExistsException;
+import juja.microservices.teams.exceptions.UserAlreadyInTeamException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -46,24 +46,24 @@ public class TeamServiceTest {
         //Given
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
         Team expected = new Team(teamRequest.getMembers());
-        List<Team> userInTeams = new ArrayList();
-        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(userInTeams);
+        List<String> userInTeams = new ArrayList();
+        when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(userInTeams);
         when(teamRepository.saveTeam(any(Team.class))).thenReturn(expected);
 
         Team actual = teamService.addTeam(teamRequest);
 
-        verify(teamRepository, atLeast(4)).getUserActiveTeams(anyString(), anyObject());
+        verify(teamRepository).checkUsersActiveTeams(anySetOf(String.class), anyObject());
         verify(teamRepository).saveTeam(any(Team.class));
         verifyNoMoreInteractions(teamRepository);
         assertEquals(expected.getMembers(), actual.getMembers());
     }
 
-    @Test(expected = UserExistsException.class)
+    @Test(expected = UserAlreadyInTeamException.class)
     public void test_addTeamIfUserExistsInAnotherTeamThrowsException() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
 
-        List<Team> userInTeams = new ArrayList(Arrays.asList(new Team(new HashSet<>(Arrays.asList("user1")))));
-        when(teamRepository.getUserActiveTeams(anyString(), anyObject())).thenReturn(userInTeams);
+        List<String> userInTeams = new ArrayList(Arrays.asList(new Team(new HashSet<>(Arrays.asList("user1")))));
+        when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(userInTeams);
         teamService.addTeam(teamRequest);
     }
 

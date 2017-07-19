@@ -60,11 +60,14 @@ public class TeamRepository {
         AggregationResults<User> groupResults
                 = mongoTemplate.aggregate(agg, Team.class, User.class);
         List<User> usersInActiveTeams = groupResults.getMappedResults();
+
         if (usersInActiveTeams == null) {
             log.debug("Finished 'checkUsersActiveTeams '{}' from DB at date '{}'. Teams is empty", members.toArray(), actualDate);
             return new ArrayList<>();
         } else {
-            List<String> users = usersInActiveTeams.stream().map(user -> user.getName()).collect(Collectors.toList());
+            List<String> users = usersInActiveTeams.stream().map(user -> user.getName()).collect(Collectors.toList
+                    ());
+            Collections.sort(users);
             log.debug("Finished 'checkUsersActiveTeams '{}' teams' from DB at date '{}'. Users in active teams <{}>",
                     members.toArray(), actualDate, users.toArray());
             return users;

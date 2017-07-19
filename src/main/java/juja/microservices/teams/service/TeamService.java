@@ -3,7 +3,7 @@ package juja.microservices.teams.service;
 import juja.microservices.teams.dao.TeamRepository;
 import juja.microservices.teams.entity.Team;
 import juja.microservices.teams.entity.TeamRequest;
-import juja.microservices.teams.exceptions.UserExistsException;
+import juja.microservices.teams.exceptions.UserAlreadyInTeamException;
 import lombok.extern.slf4j.Slf4j;
 import juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import juja.microservices.teams.exceptions.UserNotInTeamException;
@@ -32,7 +32,7 @@ public class TeamService {
         List<String> usersInTeams = teamRepository.checkUsersActiveTeams(teamRequest.getMembers(), actualDate);
         if (usersInTeams.size() > 0) {
             log.warn("User(s) '{}' exists in a another teams", usersInTeams);
-            throw new UserExistsException(String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
+            throw new UserAlreadyInTeamException(String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
         }
         Team team = mappingRequestToTeam(teamRequest);
         log.debug("Started 'Save team '{}'", team);

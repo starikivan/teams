@@ -124,8 +124,8 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         members.add(userInOneTeam);
         members.add(userInSeveralTeams);
         final List<String> expected = new ArrayList<>();
-        expected.add(userInSeveralTeams);
         expected.add(userInOneTeam);
+        expected.add(userInSeveralTeams);
 
         List<String> actual = teamRepository.checkUsersActiveTeams(members,actualDate);
 

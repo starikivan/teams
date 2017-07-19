@@ -73,17 +73,16 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserExistsException.class)
-    public ResponseEntity<ApiErrorMessage> handleKeepersException(UserExistsException ex) {
+    @ExceptionHandler(UserAlreadyInTeamException.class)
+    public ResponseEntity<ApiErrorMessage> handleKeepersException(UserAlreadyInTeamException ex) {
         ApiErrorMessage message =
-                ApiErrorMessage.builder(ApiErrorStatus.USER_EXISTS_EXCEPTION)
+                ApiErrorMessage.builder(ApiErrorStatus.USERS_ALREADY_IN_TEAM_EXCEPTION)
                         .httpStatus(HttpStatus.BAD_REQUEST.value())
                         .exceptionMessage(ex.getMessage())
                         .build();
-        logger.warn("Handle UserExistsException before out " + message);
+        logger.warn("Handle UserAlreadyInTeamException before out " + message);
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
     }
-
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex,
