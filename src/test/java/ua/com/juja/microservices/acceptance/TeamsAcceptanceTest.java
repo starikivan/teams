@@ -144,7 +144,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         String jsonContentExpectedResponse = convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
 
-        String url = TEAMS_DEACTIVATE_TEAM_URL + uuid;
+        String url = TEAMS_GET_TEAM_URL + uuid;
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
