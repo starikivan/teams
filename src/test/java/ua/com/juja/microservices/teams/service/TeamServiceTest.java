@@ -18,7 +18,6 @@ import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -66,13 +65,20 @@ public class TeamServiceTest {
         assertEquals(expected.getMembers(), actual.getMembers());
     }
 
-    @Test(expected = UserAlreadyInTeamException.class)
+    @Test
     public void test_addTeamIfUserExistsInAnotherTeamThrowsException() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
 
-        List<String> userInTeams = new ArrayList<>(Collections.singletonList("user1"));
+        List<String> userInTeams = new ArrayList<>(Arrays.asList("user1","user4"));
         when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(userInTeams);
+
+        expectedException.expect(UserAlreadyInTeamException.class);
+        expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", userInTeams
+                .toString()));
+
         teamService.addTeam(teamRequest);
+        verify(teamRepository).getUserActiveTeams(anyString(), anyObject());
+        verifyNoMoreInteractions(teamRepository);
     }
 
     @Test
