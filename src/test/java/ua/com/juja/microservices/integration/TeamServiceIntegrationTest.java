@@ -43,7 +43,8 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     private TeamService teamService;
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json",
+            loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
         Team expected = new Team(teamRequest.getMembers());
@@ -54,7 +55,8 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeamIfUsersInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/addTeamIfUsersInAnotherActiveTeam.json",
+            loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     public void test_addTeamIfUserInAnotherTeamsThrowsExeption() {
         String uuid = "user-in-team";
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));

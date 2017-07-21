@@ -57,7 +57,8 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_addTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
 
         String url = TEAMS_ADD_TEAM_URL;
-        String jsonContentRequest = Utils.convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
+        String jsonContentRequest = Utils
+                .convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
         String jsonContentControlResponse = Utils.convertToString(
                 resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
 

@@ -38,7 +38,8 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     public void test_saveTeamExecutedCorrectly() {
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
-        final Team expected = new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
+        final Team expected =
+                new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
 
         Team actual = teamRepository.saveTeam(expected);
 
@@ -52,7 +53,8 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
-        final Team expected = new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
+        final Team expected =
+                new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
 
         List<Team> actual = teamRepository.getUserActiveTeams(userInOneTeam, actualDate);
 
@@ -66,8 +68,10 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
-        final Team team1 = new Team(new LinkedHashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
-        final Team team2 = new Team(new LinkedHashSet<>(Arrays.asList(userInSeveralTeams, "user3", "user4", "user5")));
+        final Team team1 =
+                new Team(new LinkedHashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
+        final Team team2 =
+                new Team(new LinkedHashSet<>(Arrays.asList(userInSeveralTeams, "user3", "user4", "user5")));
         final List<Team> expected = new ArrayList<>();
         expected.add(team1);
         expected.add(team2);

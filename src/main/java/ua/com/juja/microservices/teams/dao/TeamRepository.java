@@ -68,7 +68,8 @@ public class TeamRepository {
         List<Member> usersInActiveTeams = groupResults.getMappedResults();
 
         if (usersInActiveTeams == null) {
-            log.debug("Finished 'checkUsersActiveTeams '{}' from DB at date '{}'. Teams is empty", members.toArray(), actualDate);
+            log.debug("Finished 'checkUsersActiveTeams '{}' from DB at date '{}'. Teams is empty", members.toArray()
+                    , actualDate);
             return new ArrayList<>();
         } else {
             List<String> users = usersInActiveTeams.stream().map(Member::getUuid).collect(Collectors.toList());

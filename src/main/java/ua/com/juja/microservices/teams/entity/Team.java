@@ -40,7 +40,9 @@ public class Team {
     @JsonCreator
     public Team(@JsonProperty("members") Set<String> members) {
         this.members = members;
-        this.activateDate = Date.from(LocalDateTime.of(LocalDate.now(), LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant());
-        this.deactivateDate = Date.from(LocalDateTime.of(LocalDate.now().plusMonths(1).minusDays(1), LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
+        this.activateDate = Date.from(LocalDateTime.of(LocalDate.now(),
+                LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant());
+        this.deactivateDate = Date.from(LocalDateTime.of(LocalDate.now().plusMonths(1).minusDays(1),
+                LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
     }
 }

@@ -31,7 +31,8 @@ public class TeamService {
         List<String> usersInTeams = teamRepository.checkUsersActiveTeams(teamRequest.getMembers(), actualDate);
         if (usersInTeams.size() > 0) {
             log.warn("User(s) '{}' exists in a another teams", usersInTeams);
-            throw new UserAlreadyInTeamException(String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
+            throw new UserAlreadyInTeamException(
+                    String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
         }
         Team team = mappingRequestToTeam(teamRequest);
         log.debug("Started 'Save team '{}'", team);

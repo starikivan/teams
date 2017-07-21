@@ -88,7 +88,8 @@ public class TeamControllerTest {
     @Test
     public void test_addTeamIfAllUsersNotInActiveTeams() throws Exception {
 
-        String jsonContentRequest = Utils.convertToString(resource("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
+        String jsonContentRequest = Utils.convertToString(resource(
+                        "acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         final TeamRequest teamRequest = new TeamRequest(new LinkedHashSet<>(Arrays.asList("400",
                 "100",
                 "200",
@@ -107,7 +108,8 @@ public class TeamControllerTest {
     public void test_deactivateTeamIfUserInTeamExecutedCorrectly() throws Exception {
 
         final String uuid = "user-in-team";
-        final Team team = new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
+        final Team team =
+                new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
 
         when(teamService.deactivateTeam(uuid)).thenReturn(team);
         String result = getGoodResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
@@ -121,7 +123,8 @@ public class TeamControllerTest {
     public void test_getTeamByUuidIfUserInTeamExecutedCorrectly() throws Exception {
 
         final String uuid = "user-in-team";
-        final Team team = new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
+        final Team team =
+                new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
 
         when(teamService.getUserActiveTeam(uuid)).thenReturn(team);
         String result = getGoodResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.GET);
