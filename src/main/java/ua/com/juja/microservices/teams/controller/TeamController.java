@@ -54,7 +54,7 @@ public class TeamController {
 
     @GetMapping(value = "/users/{uuid}", produces = "application/json")
     public ResponseEntity<?> getTeamByUuid(@PathVariable String uuid) {
-        log.debug("Received 'Get team' request. Get team team of user {}", uuid);
+        log.debug("Received 'Get team' request. Get team of user {}", uuid);
         Team team = teamService.getUserActiveTeam(uuid);
         log.info("Team content received. Team Id: {}", team.getId());
         log.debug("Request 'Get team' returned team {}", team);
