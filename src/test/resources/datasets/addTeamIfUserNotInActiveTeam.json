@@ -3,7 +3,7 @@
     {
       "members": ["user3","user1","user2","user4"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
-      "deactivateDate":{ "$date" : "2017-08-30T00:00:00.000Z"}
+      "deactivateDate":{ "$date" : "2025-08-30T00:00:00.000Z"}
     }
   ]
 }

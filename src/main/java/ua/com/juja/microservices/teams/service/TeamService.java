@@ -1,16 +1,15 @@
 package ua.com.juja.microservices.teams.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ua.com.juja.microservices.teams.dao.TeamRepository;
 import ua.com.juja.microservices.teams.entity.Team;
 import ua.com.juja.microservices.teams.entity.TeamRequest;
 import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
-import lombok.extern.slf4j.Slf4j;
 import ua.com.juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
-import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -50,7 +49,8 @@ public class TeamService {
         log.debug("Started 'deactivateTeam' with uuid '{}'", uuid);
         Team team = getUserActiveTeam(uuid);
         log.debug("Finished 'usersInCurrentTeams' with uuid '{}'. Teams ", uuid, team.toString());
-        team.setDeactivateDate(Date.from(Instant.now()));
+        Date deactivateDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        team.setDeactivateDate(deactivateDate);
         log.info("Finished 'setDectivate date' in team '{}' ", team.toString());
         log.debug("Started 'Save team in repository'. Team '{}'", team.toString());
         Team savedTeam = teamRepository.saveTeam(team);

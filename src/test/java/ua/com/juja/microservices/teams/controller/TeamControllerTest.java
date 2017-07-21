@@ -1,11 +1,5 @@
 package ua.com.juja.microservices.teams.controller;
 
-import ua.com.juja.microservices.teams.entity.Team;
-import ua.com.juja.microservices.teams.entity.TeamRequest;
-import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
-import ua.com.juja.microservices.teams.exceptions.UserInSeveralTeamsException;
-import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
-import ua.com.juja.microservices.teams.service.TeamService;
 import net.javacrumbs.jsonunit.core.Option;
 import org.eclipse.jetty.http.HttpMethod;
 import org.junit.Before;
@@ -17,6 +11,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import ua.com.juja.microservices.Utils;
+import ua.com.juja.microservices.teams.entity.Team;
+import ua.com.juja.microservices.teams.entity.TeamRequest;
+import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
+import ua.com.juja.microservices.teams.exceptions.UserInSeveralTeamsException;
+import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
+import ua.com.juja.microservices.teams.service.TeamService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static ua.com.juja.microservices.teams.service.Utils.convertToString;
 import static net.javacrumbs.jsonunit.core.util.ResourceUtils.resource;
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 import static org.junit.Assert.assertEquals;
@@ -68,9 +68,10 @@ public class TeamControllerTest {
     @Test
     public void test_addTeamIfSomeUsersInActiveTeams() throws Exception {
 
-        String jsonContentRequest = convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
+        String jsonContentRequest = Utils.convertToString(resource
+                ("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
 
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
         List<String> usersInTeams = new ArrayList<>(Arrays.asList("user-in-team", "user-in-team2"));
 
@@ -87,11 +88,11 @@ public class TeamControllerTest {
     @Test
     public void test_addTeamIfAllUsersNotInActiveTeams() throws Exception {
 
-        String jsonContentRequest = convertToString(resource("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
-        final TeamRequest teamRequest = new TeamRequest(new LinkedHashSet<>(Arrays.asList("asdqwe1",
-                "f827811f-51e8-4fc4-a56d-aebcd2193bc3",
-                "asdqwe3",
-                "asdqwe4")));
+        String jsonContentRequest = Utils.convertToString(resource("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
+        final TeamRequest teamRequest = new TeamRequest(new LinkedHashSet<>(Arrays.asList("400",
+                "100",
+                "200",
+                "300")));
         final Team team = new Team(teamRequest.getMembers());
 
         when(teamService.addTeam(any(TeamRequest.class))).thenReturn(team);
@@ -99,7 +100,7 @@ public class TeamControllerTest {
 
         verify(teamService).addTeam(any(TeamRequest.class));
         verifyNoMoreInteractions(teamService);
-        assertEquals(team.toJSON(), result);
+        assertEquals(Utils.convertToJSON(team), result);
     }
 
     @Test
@@ -113,7 +114,7 @@ public class TeamControllerTest {
 
         verify(teamService).deactivateTeam(uuid);
         verifyNoMoreInteractions(teamService);
-        assertEquals(team.toJSON(), result);
+        assertEquals(Utils.convertToJSON(team), result);
     }
 
     @Test
@@ -127,13 +128,13 @@ public class TeamControllerTest {
 
         verify(teamService).getUserActiveTeam(uuid);
         verifyNoMoreInteractions(teamService);
-        assertEquals(team.toJSON(), result);
+        assertEquals(Utils.convertToJSON(team), result);
     }
 
     @Test
     public void test_getTeamByUuidIfUserNotInTeamBadResponce() throws Exception {
 
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
         final String uuid = "user-not-in-team";
 
@@ -148,7 +149,7 @@ public class TeamControllerTest {
     @Test
     public void test_deactivateTeamIfUserNotInTeamBadResponce() throws Exception {
 
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
         final String uuid = "user-not-in-team";
 
@@ -162,7 +163,7 @@ public class TeamControllerTest {
 
     @Test
     public void test_deactivateTeamIfUserInSeveralTeamsBadResponce() throws Exception {
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
         final String uuid = "user-in-several-teams";
 
@@ -214,7 +215,6 @@ public class TeamControllerTest {
     }
 
     private String getBadPostResult(String uri, String jsonContentRequest) throws Exception {
-
         return mockMvc.perform(post(uri)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(jsonContentRequest))

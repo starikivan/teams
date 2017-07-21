@@ -10,10 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.com.juja.microservices.Utils;
 
 import java.io.IOException;
 
-import static ua.com.juja.microservices.teams.service.Utils.convertToString;
 import static net.javacrumbs.jsonunit.core.util.ResourceUtils.resource;
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 
@@ -38,12 +38,13 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     @Test
     public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
         String url = TEAMS_ADD_TEAM_URL;
-        String jsonContentRequest = convertToString(resource("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
+        String jsonContentRequest = Utils.convertToString(resource
+                ("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
 
         String result = actualResponse.asString();
 
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseAddTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
@@ -56,8 +57,8 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_addTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
 
         String url = TEAMS_ADD_TEAM_URL;
-        String jsonContentRequest = convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
-        String jsonContentControlResponse = convertToString(
+        String jsonContentRequest = Utils.convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
+        String jsonContentControlResponse = Utils.convertToString(
                 resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
 
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
@@ -75,7 +76,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
         String result = actualResponse.asString();
-        String jsonContentExpectedResponse = String.format(convertToString(
+        String jsonContentExpectedResponse = String.format(Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInTeamExecutedCorrectly.json")),
                 "", "");
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
@@ -90,7 +91,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_deactivateTeamIfUserNotInTeamThrowsException() throws IOException {
 
         String uuid = "user-not-in-team";
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
 
         String url = TEAMS_DEACTIVATE_TEAM_URL + uuid;
@@ -106,7 +107,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_deactivateTeamIfUserInSeveralTeamsThrowsException() throws IOException {
 
         String uuid = "user-in-several-teams";
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
 
         String url = TEAMS_DEACTIVATE_TEAM_URL + uuid;
@@ -126,7 +127,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
         String result = actualResponse.asString();
-        String jsonContentExpectedResponse = String.format(convertToString(
+        String jsonContentExpectedResponse = String.format(Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInTeamExecutedCorrectly.json")),
                 "", "");
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
@@ -141,7 +142,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_getTeamIfUserInSeveralTeamsThrowsException() throws IOException {
 
         String uuid = "user-in-several-teams";
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
 
         String url = TEAMS_GET_TEAM_URL + uuid;
@@ -157,7 +158,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_getTeamIfUserNotInTeamThrowsException() throws IOException {
 
         String uuid = "user-not-in-team";
-        String jsonContentExpectedResponse = convertToString(
+        String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
 
         String url = TEAMS_DEACTIVATE_TEAM_URL + uuid;

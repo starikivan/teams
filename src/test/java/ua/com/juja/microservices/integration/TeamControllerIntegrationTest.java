@@ -1,7 +1,6 @@
 package ua.com.juja.microservices.integration;
 
 import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
-import ua.com.juja.microservices.teams.service.Utils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,11 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.juja.microservices.Utils;
 
 import static net.javacrumbs.jsonunit.core.util.ResourceUtils.resource;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

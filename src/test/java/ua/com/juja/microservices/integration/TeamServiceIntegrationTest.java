@@ -2,25 +2,23 @@ package ua.com.juja.microservices.integration;
 
 import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
 import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
+import net.javacrumbs.jsonunit.core.Option;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 import ua.com.juja.microservices.teams.dao.TeamRepository;
 import ua.com.juja.microservices.teams.entity.Team;
 import ua.com.juja.microservices.teams.entity.TeamRequest;
 import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
-import ua.com.juja.microservices.teams.service.TeamService;
 import ua.com.juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
-import net.javacrumbs.jsonunit.core.Option;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.junit.rules.ExpectedException;
+import ua.com.juja.microservices.teams.service.TeamService;
 
 import javax.inject.Inject;
-
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -70,7 +68,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getTeamIfUserInTeamExecutedCorrectly() {
-        Date actualDate = Date.from(Instant.now());
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final String uuid = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
@@ -82,7 +80,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getTeamIfUserNotInTeamExecutedCorrectly() {
-        Date actualDate = Date.from(Instant.now());
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final String uuid = "user-not-in-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsBefore.size());
@@ -94,7 +92,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_getTeamIfUserInSeveralTeamsExecutedCorrectly() {
-        Date actualDate = Date.from(Instant.now());
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final String uuid = "user-in-several-teams";
 
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
@@ -108,13 +106,13 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void test_deactivateTeamIfUserInTeamExecutedCorrectly() {
-        Date actualDate = Date.from(Instant.now());
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final String uuid = "user-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
 
         teamService.deactivateTeam(uuid);
-        actualDate = Date.from(Instant.now());
+        actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsAfter.size());
     }

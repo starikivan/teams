@@ -1,27 +1,35 @@
 package ua.com.juja.microservices.teams.service;
 
-import ua.com.juja.microservices.teams.dao.TeamRepository;
-import ua.com.juja.microservices.teams.entity.Team;
-import ua.com.juja.microservices.teams.entity.TeamRequest;
-import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.inject.Inject;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import ua.com.juja.microservices.teams.dao.TeamRepository;
+import ua.com.juja.microservices.teams.entity.Team;
+import ua.com.juja.microservices.teams.entity.TeamRequest;
+import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
 import ua.com.juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 
-import java.util.*;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anySetOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Ivan Shapovalov
