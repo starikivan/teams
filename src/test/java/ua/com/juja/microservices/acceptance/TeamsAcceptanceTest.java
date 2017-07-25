@@ -39,13 +39,13 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
         String url = TEAMS_ADD_TEAM_URL;
         String jsonContentRequest = Utils.convertToString(resource
-                ("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
+                ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
 
         String result = actualResponse.asString();
 
         String jsonContentExpectedResponse = Utils.convertToString(
-                resource("acceptance/response/responseAddTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
+                resource("acceptance/response/responseActivateTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS)
@@ -58,9 +58,9 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
         String url = TEAMS_ADD_TEAM_URL;
         String jsonContentRequest = Utils
-                .convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
+                .convertToString(resource("acceptance/request/requestActivateTeamIfUsersInActiveTeamThrowsExceptions.json"));
         String jsonContentControlResponse = Utils.convertToString(
-                resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
+                resource("acceptance/response/responseActivateTeamIfUserInActiveTeamThrowsException.json"));
 
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
 

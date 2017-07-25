@@ -48,7 +48,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json")
     public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws Exception {
         String jsonContentRequest = Utils.convertToString((resource
-                ("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json")));
+                ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json")));
 
         mockMvc.perform(post(TEAMS_ADD_TEAM_URL)
                 .contentType(APPLICATION_JSON_UTF8)

@@ -24,7 +24,7 @@
         </encoder>
     </appender>
 
-    <logger name="juja.microservices" level="DEBUG" additivity="false">
+    <logger name="ua.com.juja.microservices" level="DEBUG" additivity="false">
         <appender-ref ref="Console-Appender"/>
         <appender-ref ref="RollingFile-Appender"/>
     </logger>

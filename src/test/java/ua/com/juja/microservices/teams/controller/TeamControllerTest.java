@@ -57,22 +57,22 @@ public class TeamControllerTest {
     private TeamService teamService;
 
     private String TEAMS_DEACTIVATE_TEAM_URL;
-    private String TEAMS_ADD_TEAM_URL;
+    private String TEAMS_ACTIVATE_TEAM_URL;
 
     @Before
     public void setup() {
         TEAMS_DEACTIVATE_TEAM_URL = "/" + restApiVersion + "/teams/users/";
-        TEAMS_ADD_TEAM_URL = "/" + restApiVersion + "/teams";
+        TEAMS_ACTIVATE_TEAM_URL = "/" + restApiVersion + "/teams";
     }
 
     @Test
     public void test_activateTeamIfSomeUsersInActiveTeams() throws Exception {
 
         String jsonContentRequest = Utils.convertToString(resource
-                ("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
+                ("acceptance/request/requestActivateTeamIfUsersInActiveTeamThrowsExceptions.json"));
 
         String jsonContentExpectedResponse = Utils.convertToString(
-                resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
+                resource("acceptance/response/responseActivateTeamIfUserInActiveTeamThrowsException.json"));
         List<String> usersInTeams = new ArrayList<>(Arrays.asList("user-in-team", "user-in-team2"));
 
         when(teamService.activateTeam(any(TeamRequest.class)))
@@ -80,7 +80,7 @@ public class TeamControllerTest {
                         String.format("User(s) '#%s#' exist(s) in another teams", usersInTeams.toString())));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadPostResult(TEAMS_ADD_TEAM_URL, jsonContentRequest);
+        String actualResponse = getBadPostResult(TEAMS_ACTIVATE_TEAM_URL, jsonContentRequest);
 
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
@@ -89,7 +89,7 @@ public class TeamControllerTest {
     public void test_activateTeamIfAllUsersNotInActiveTeams() throws Exception {
 
         String jsonContentRequest = Utils.convertToString(resource(
-                        "acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
+                "acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         final TeamRequest teamRequest = new TeamRequest(new LinkedHashSet<>(Arrays.asList("400",
                 "100",
                 "200",
@@ -97,7 +97,7 @@ public class TeamControllerTest {
         final Team team = new Team(teamRequest.getMembers());
 
         when(teamService.activateTeam(any(TeamRequest.class))).thenReturn(team);
-        String result = getGoodPostResult(TEAMS_ADD_TEAM_URL, jsonContentRequest);
+        String result = getGoodPostResult(TEAMS_ACTIVATE_TEAM_URL, jsonContentRequest);
 
         verify(teamService).activateTeam(any(TeamRequest.class));
         verifyNoMoreInteractions(teamService);
