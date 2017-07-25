@@ -43,28 +43,29 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     private TeamService teamService;
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json",
+    @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json",
             loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() {
+    public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
         Team expected = new Team(teamRequest.getMembers());
 
-        Team actual = teamService.addTeam(teamRequest);
+        Team actual = teamService.activateTeam(teamRequest);
         expected.setId(actual.getId());
         assertThatJson(actual).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expected);
     }
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeamIfUsersInAnotherActiveTeam.json",
+    @UsingDataSet(locations = "/datasets/activateTeamIfUsersInAnotherActiveTeam.json",
             loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_addTeamIfUserInAnotherTeamsThrowsExeption() {
+    public void test_activateTeamIfUserInAnotherTeamsThrowsExeption() {
         String uuid = "user-in-team";
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
 
         expectedException.expect(UserAlreadyInTeamException.class);
-        expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", "[" + uuid + "]"));
+        expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams", "[" + uuid +
+                "]"));
 
-        teamService.addTeam(teamRequest);
+        teamService.activateTeam(teamRequest);
     }
 
     @Test

@@ -49,7 +49,7 @@ public class TeamServiceTest {
     private TeamRepository teamRepository;
 
     @Test
-    public void test_addTeamIfUserNotInAnotherTeamsExecutedCorrectly() {
+    public void test_activateTeamIfUserNotInAnotherTeamsExecutedCorrectly() {
         //Given
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
         Team expected = new Team(teamRequest.getMembers());
@@ -57,7 +57,7 @@ public class TeamServiceTest {
         when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(userInTeams);
         when(teamRepository.saveTeam(any(Team.class))).thenReturn(expected);
 
-        Team actual = teamService.addTeam(teamRequest);
+        Team actual = teamService.activateTeam(teamRequest);
 
         verify(teamRepository).checkUsersActiveTeams(anySetOf(String.class), anyObject());
         verify(teamRepository).saveTeam(any(Team.class));
@@ -66,17 +66,17 @@ public class TeamServiceTest {
     }
 
     @Test
-    public void test_addTeamIfUserExistsInAnotherTeamThrowsException() {
+    public void test_activateTeamIfUserExistsInAnotherTeamThrowsException() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
 
         List<String> userInTeams = new ArrayList<>(Arrays.asList("user1","user4"));
         when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(userInTeams);
 
         expectedException.expect(UserAlreadyInTeamException.class);
-        expectedException.expectMessage(String.format("User(s) '%s' exists in a another teams", userInTeams
+        expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams", userInTeams
                 .toString()));
 
-        teamService.addTeam(teamRequest);
+        teamService.activateTeam(teamRequest);
         verify(teamRepository).getUserActiveTeams(anyString(), anyObject());
         verifyNoMoreInteractions(teamRepository);
     }

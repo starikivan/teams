@@ -45,8 +45,8 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json")
-    public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() throws Exception {
+    @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json")
+    public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws Exception {
         String jsonContentRequest = Utils.convertToString((resource
                 ("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json")));
 

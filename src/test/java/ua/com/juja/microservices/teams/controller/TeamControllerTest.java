@@ -66,7 +66,7 @@ public class TeamControllerTest {
     }
 
     @Test
-    public void test_addTeamIfSomeUsersInActiveTeams() throws Exception {
+    public void test_activateTeamIfSomeUsersInActiveTeams() throws Exception {
 
         String jsonContentRequest = Utils.convertToString(resource
                 ("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
@@ -75,9 +75,9 @@ public class TeamControllerTest {
                 resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
         List<String> usersInTeams = new ArrayList<>(Arrays.asList("user-in-team", "user-in-team2"));
 
-        when(teamService.addTeam(any(TeamRequest.class)))
+        when(teamService.activateTeam(any(TeamRequest.class)))
                 .thenThrow(new UserAlreadyInTeamException(
-                        String.format("User(s) '%s' exists in a another teams", usersInTeams.toString())));
+                        String.format("User(s) '#%s#' exist(s) in another teams", usersInTeams.toString())));
 
         verifyNoMoreInteractions(teamService);
         String actualResponse = getBadPostResult(TEAMS_ADD_TEAM_URL, jsonContentRequest);
@@ -86,7 +86,7 @@ public class TeamControllerTest {
     }
 
     @Test
-    public void test_addTeamIfAllUsersNotInActiveTeams() throws Exception {
+    public void test_activateTeamIfAllUsersNotInActiveTeams() throws Exception {
 
         String jsonContentRequest = Utils.convertToString(resource(
                         "acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
@@ -96,10 +96,10 @@ public class TeamControllerTest {
                 "300")));
         final Team team = new Team(teamRequest.getMembers());
 
-        when(teamService.addTeam(any(TeamRequest.class))).thenReturn(team);
+        when(teamService.activateTeam(any(TeamRequest.class))).thenReturn(team);
         String result = getGoodPostResult(TEAMS_ADD_TEAM_URL, jsonContentRequest);
 
-        verify(teamService).addTeam(any(TeamRequest.class));
+        verify(teamService).activateTeam(any(TeamRequest.class));
         verifyNoMoreInteractions(teamService);
         assertEquals(Utils.convertToJSON(team), result);
     }

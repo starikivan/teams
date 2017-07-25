@@ -29,11 +29,11 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> addTeam(@Valid @RequestBody TeamRequest request) {
-        log.debug("Received 'Add team' request {}", request);
-        Team team = teamService.addTeam(request);
-        log.info("New team added. Id: {}", team.getId());
-        log.debug("Request 'Add team' returned {}", team);
+    public ResponseEntity<?> activateTeam(@Valid @RequestBody TeamRequest request) {
+        log.debug("Received 'Activate team' request {}", request);
+        Team team = teamService.activateTeam(request);
+        log.info("New team activated. Id: {}", team.getId());
+        log.debug("Request 'Activate team' returned {}", team);
         return ResponseEntity.ok(team);
     }
 

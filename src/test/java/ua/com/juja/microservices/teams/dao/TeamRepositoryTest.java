@@ -36,6 +36,9 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
 
     @Test
     public void test_saveTeamExecutedCorrectly() {
+        String a = "asdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", b =
+                "dsdfsafsafsafsaffasfsfsfsafsafafaf";
+        String c = a + b;
         final String userInOneTeam = "user-in-one-team";
         final String userInSeveralTeams = "user-in-several-teams";
         final Team expected =
