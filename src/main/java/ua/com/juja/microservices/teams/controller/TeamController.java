@@ -32,8 +32,7 @@ public class TeamController {
     public ResponseEntity<?> activateTeam(@Valid @RequestBody TeamRequest request) {
         log.debug("Received 'Activate team' request {}", request);
         Team team = teamService.activateTeam(request);
-        log.info("New team activated. Id: {}, members {}", team.getId(),team.toString());
-        log.debug("Request 'Activate team' returned {}", team);
+        log.info("New team activated. Team {}", team.toString());
         return ResponseEntity.ok(team);
     }
 
