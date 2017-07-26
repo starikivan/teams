@@ -25,14 +25,14 @@ public class TeamService {
     @Inject
     private TeamRepository teamRepository;
 
-    public Team addTeam(TeamRequest teamRequest) {
-        log.debug("Started 'addTeam' TeamRequest: {}", teamRequest);
+    public Team activateTeam(TeamRequest teamRequest) {
+        log.debug("Started 'activateTeam' TeamRequest: {}", teamRequest);
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         List<String> usersInTeams = teamRepository.checkUsersActiveTeams(teamRequest.getMembers(), actualDate);
         if (usersInTeams.size() > 0) {
-            log.warn("User(s) '{}' exists in a another teams", usersInTeams);
+            log.warn("User(s) '{}' exist(s) in a another teams", usersInTeams);
             throw new UserAlreadyInTeamException(
-                    String.format("User(s) '%s' exists in a another teams", usersInTeams.toString()));
+                    String.format("User(s) '#%s#' exist(s) in another teams", usersInTeams.toString()));
         }
         Team team = mappingRequestToTeam(teamRequest);
         log.debug("Started 'Save team '{}'", team);

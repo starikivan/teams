@@ -34,33 +34,33 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         TEAMS_ADD_TEAM_URL = "/" + restApiVersion + "/teams";
     }
 
-    @UsingDataSet(locations = "/datasets/addTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_addTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
+    public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
         String url = TEAMS_ADD_TEAM_URL;
         String jsonContentRequest = Utils.convertToString(resource
-                ("acceptance/request/requestAddTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
+                ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
 
         String result = actualResponse.asString();
 
         String jsonContentExpectedResponse = Utils.convertToString(
-                resource("acceptance/response/responseAddTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
+                resource("acceptance/response/responseActivateTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS)
                 .isEqualTo(jsonContentExpectedResponse);
     }
 
-    @UsingDataSet(locations = "/datasets/addTeamIfUsersInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @UsingDataSet(locations = "/datasets/activateTeamIfUsersInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_addTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
+    public void test_activateTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
 
         String url = TEAMS_ADD_TEAM_URL;
         String jsonContentRequest = Utils
-                .convertToString(resource("acceptance/request/requestAddTeamIfUsersInActiveTeamThrowsExceptions.json"));
+                .convertToString(resource("acceptance/request/requestActivateTeamIfUsersInActiveTeamThrowsExceptions.json"));
         String jsonContentControlResponse = Utils.convertToString(
-                resource("acceptance/response/responseAddTeamIfUserInActiveTeamThrowsException.json"));
+                resource("acceptance/response/responseActivateTeamIfUserInActiveTeamThrowsException.json"));
 
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
 

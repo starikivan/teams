@@ -3,6 +3,6 @@
   "internalErrorCode": "TMF-F1-D3",
   "clientMessage": "Sorry, but the user already exists in team",
   "developerMessage": "Exception - UserAlreadyInTeamException",
-  "exceptionMessage": "User(s) '[user-in-team, user-in-team2]' exists in a another teams",
+  "exceptionMessage": "User(s) '#[user-in-team, user-in-team2]#' exist(s) in another teams",
   "detailErrors": []
 }
