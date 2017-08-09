@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.javacrumbs.jsonunit.core.util.ResourceUtils.resource;
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
@@ -47,8 +48,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TeamController.class)
 public class TeamControllerTest {
 
-    @Value("${rest.api.version}")
-    private String restApiVersion;
+    @Value("${teams.rest.api.version}")
+    private String teamsRestApiVersion;
+    @Value("${teams.baseURL}")
+    private String teamsBaseUrl;
+    @Value("${teams.endpoint.activateTeam}")
+    private String teamsActivateTeamUrl;
+    @Value("${teams.endpoint.deactivateTeam}")
+    private String teamsDeactivateTeamUrl;
+    @Value("${teams.endpoint.getTeam}")
+    private String teamsGetTeamUrl;
 
     @Inject
     private MockMvc mockMvc;
@@ -56,13 +65,15 @@ public class TeamControllerTest {
     @MockBean
     private TeamService teamService;
 
-    private String TEAMS_DEACTIVATE_TEAM_URL;
-    private String TEAMS_ACTIVATE_TEAM_URL;
+    private String teamsFullActivateTeamUrl;
+    private String teamsFullDeactivateTeamUrl;
+    private String teamsFullGetTeamUrl;
 
     @Before
     public void setup() {
-        TEAMS_DEACTIVATE_TEAM_URL = "/" + restApiVersion + "/teams/users/";
-        TEAMS_ACTIVATE_TEAM_URL = "/" + restApiVersion + "/teams";
+        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion+teamsBaseUrl+teamsActivateTeamUrl;
+        teamsFullDeactivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsDeactivateTeamUrl + "/";
+        teamsFullGetTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetTeamUrl + "/";
     }
 
     @Test
@@ -77,10 +88,11 @@ public class TeamControllerTest {
 
         when(teamService.activateTeam(any(TeamRequest.class)))
                 .thenThrow(new UserAlreadyInTeamException(
-                        String.format("User(s) '#%s#' exist(s) in another teams", usersInTeams.toString())));
+                        String.format("User(s) '#%s#' exist(s) in another teams",
+                                usersInTeams.stream().collect(Collectors.joining(",")))));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadPostResult(TEAMS_ACTIVATE_TEAM_URL, jsonContentRequest);
+        String actualResponse = getBadPostResult(teamsFullActivateTeamUrl, jsonContentRequest);
 
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
@@ -97,7 +109,7 @@ public class TeamControllerTest {
         final Team team = new Team(teamRequest.getMembers());
 
         when(teamService.activateTeam(any(TeamRequest.class))).thenReturn(team);
-        String result = getGoodPostResult(TEAMS_ACTIVATE_TEAM_URL, jsonContentRequest);
+        String result = getGoodPostResult(teamsFullActivateTeamUrl, jsonContentRequest);
 
         verify(teamService).activateTeam(any(TeamRequest.class));
         verifyNoMoreInteractions(teamService);
@@ -112,7 +124,7 @@ public class TeamControllerTest {
                 new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
 
         when(teamService.deactivateTeam(uuid)).thenReturn(team);
-        String result = getGoodResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
+        String result = getGoodResult(teamsFullDeactivateTeamUrl + uuid, HttpMethod.PUT);
 
         verify(teamService).deactivateTeam(uuid);
         verifyNoMoreInteractions(teamService);
@@ -127,7 +139,7 @@ public class TeamControllerTest {
                 new Team(new LinkedHashSet<>(Arrays.asList(uuid, "user1", "user2", "user-in-several-teams")));
 
         when(teamService.getUserActiveTeam(uuid)).thenReturn(team);
-        String result = getGoodResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.GET);
+        String result = getGoodResult(teamsFullGetTeamUrl + uuid, HttpMethod.GET);
 
         verify(teamService).getUserActiveTeam(uuid);
         verifyNoMoreInteractions(teamService);
@@ -145,7 +157,7 @@ public class TeamControllerTest {
                 "'%s' not in team now", uuid)));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.GET);
+        String actualResponse = getBadResult(teamsFullGetTeamUrl + uuid, HttpMethod.GET);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
 
@@ -160,7 +172,7 @@ public class TeamControllerTest {
                 "'%s' not in team now", uuid)));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
+        String actualResponse = getBadResult(teamsFullDeactivateTeamUrl + uuid, HttpMethod.PUT);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
     }
 
@@ -174,7 +186,7 @@ public class TeamControllerTest {
                 .thenThrow(new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid)));
 
         verifyNoMoreInteractions(teamService);
-        String actualResponse = getBadResult(TEAMS_DEACTIVATE_TEAM_URL + uuid, HttpMethod.PUT);
+        String actualResponse = getBadResult(teamsFullDeactivateTeamUrl + uuid, HttpMethod.PUT);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
 
     }

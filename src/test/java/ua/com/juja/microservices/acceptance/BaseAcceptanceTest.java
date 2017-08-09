@@ -8,6 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import org.eclipse.jetty.http.HttpMethod;
 import org.junit.Before;
 import org.junit.Rule;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,15 +24,19 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @DirtiesContext
 public class BaseAcceptanceTest {
 
+    private String mongoDbName="teams";
+    private String mongoDbHost="127.0.0.1";
+    private int mongoDbPort=27017;
+
     @LocalServerPort
     int localPort;
 
     @Rule
     public MongoDbRule mongoDbRule = new MongoDbRule(
             mongoDb()
-                    .databaseName("teams")
-                    .host("127.0.0.1")
-                    .port(27017)
+                    .databaseName(mongoDbName)
+                    .host(mongoDbHost)
+                    .port(mongoDbPort)
                     .build()
     );
 

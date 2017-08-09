@@ -21,14 +21,14 @@ import javax.validation.Valid;
  * @author Andrii Sidun
  */
 @RestController
-@RequestMapping(value = "/v1/teams")
+@RequestMapping(value = "/"+"${teams.rest.api.version}"+"${teams.baseURL}")
 @Slf4j
 public class TeamController {
 
     @Inject
     private TeamService teamService;
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping(value="${teams.endpoint.activateTeam}",consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> activateTeam(@Valid @RequestBody TeamRequest request) {
         log.debug("Received 'Activate team' request {}", request);
         Team team = teamService.activateTeam(request);
@@ -37,7 +37,7 @@ public class TeamController {
         return ResponseEntity.ok(team);
     }
 
-    @PutMapping(value = "/users/{uuid}", produces = "application/json")
+    @PutMapping(value = "${teams.endpoint.deactivateTeam}"+"/{uuid}", produces = "application/json")
     public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
         log.debug("Received 'Deactivate team' request. Deactivate team of user {}", uuid);
         Team team = teamService.deactivateTeam(uuid);
@@ -52,7 +52,7 @@ public class TeamController {
         return null;
     }
 
-    @GetMapping(value = "/users/{uuid}", produces = "application/json")
+    @GetMapping(value = "${teams.endpoint.getTeam}"+"/{uuid}", produces = "application/json")
     public ResponseEntity<?> getTeamByUuid(@PathVariable String uuid) {
         log.debug("Received 'Get team' request. Get team of user {}", uuid);
         Team team = teamService.getUserActiveTeam(uuid);

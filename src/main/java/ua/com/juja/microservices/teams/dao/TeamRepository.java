@@ -2,6 +2,7 @@ package ua.com.juja.microservices.teams.dao;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -32,6 +33,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwi
 @Slf4j
 public class TeamRepository {
 
+    @Value("${spring.data.mongodb.collection}")
+    private String mongoCollectionName;
     @Inject
     private MongoTemplate mongoTemplate;
 
@@ -39,7 +42,7 @@ public class TeamRepository {
         log.debug("Started 'Get user teams' '{}' from DB at date '{}'", uuid, actualDate);
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(actualDate)
                 .and("members").is(uuid).and("activateDate").lte(actualDate)
-        ), Team.class);
+        ), Team.class,mongoCollectionName);
 
         if (teams == null) {
             log.debug("Finished 'Get user '{}' teams from DB at date '{}'. Teams is empty", uuid, actualDate);
@@ -64,7 +67,7 @@ public class TeamRepository {
         );
 
         AggregationResults<Member> groupResults
-                = mongoTemplate.aggregate(agg, Team.class, Member.class);
+                = mongoTemplate.aggregate(agg,mongoCollectionName, Member.class);
         List<Member> usersInActiveTeams = groupResults.getMappedResults();
 
         if (usersInActiveTeams == null) {
@@ -82,7 +85,7 @@ public class TeamRepository {
 
     public Team saveTeam(Team team) {
         log.debug("Started 'Save team' '{}' into DB ", team.toString());
-        mongoTemplate.save(team);
+        mongoTemplate.save(team,mongoCollectionName);
         log.debug("Finished 'Save team' '{}' into DB ", team.toString());
         return team;
     }
