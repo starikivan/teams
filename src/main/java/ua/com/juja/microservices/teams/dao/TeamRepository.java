@@ -42,7 +42,7 @@ public class TeamRepository {
         log.debug("Started 'Get user teams' '{}' from DB at date '{}'", uuid, actualDate);
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(actualDate)
                 .and("members").is(uuid).and("activateDate").lte(actualDate)
-        ), Team.class,mongoCollectionName);
+        ), Team.class, mongoCollectionName);
 
         if (teams == null) {
             log.debug("Finished 'Get user '{}' teams from DB at date '{}'. Teams is empty", uuid, actualDate);
@@ -67,7 +67,7 @@ public class TeamRepository {
         );
 
         AggregationResults<Member> groupResults
-                = mongoTemplate.aggregate(agg,mongoCollectionName, Member.class);
+                = mongoTemplate.aggregate(agg, mongoCollectionName, Member.class);
         List<Member> usersInActiveTeams = groupResults.getMappedResults();
 
         if (usersInActiveTeams == null) {
@@ -85,7 +85,7 @@ public class TeamRepository {
 
     public Team saveTeam(Team team) {
         log.debug("Started 'Save team' '{}' into DB ", team.toString());
-        mongoTemplate.save(team,mongoCollectionName);
+        mongoTemplate.save(team, mongoCollectionName);
         log.debug("Finished 'Save team' '{}' into DB ", team.toString());
         return team;
     }

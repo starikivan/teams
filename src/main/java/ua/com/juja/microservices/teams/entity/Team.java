@@ -3,7 +3,6 @@ package ua.com.juja.microservices.teams.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,6 @@ import java.util.Set;
 @Data
 @ToString
 @Slf4j
-@JsonTypeName("teams")
 public class Team {
     @Id
     private String id;
