@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrii.Sidun
@@ -32,7 +33,8 @@ public class TeamService {
         if (usersInTeams.size() > 0) {
             log.warn("User(s) '{}' exist(s) in a another teams", usersInTeams);
             throw new UserAlreadyInTeamException(
-                    String.format("User(s) '#%s#' exist(s) in another teams", usersInTeams.toString()));
+                    String.format("User(s) '#%s#' exist(s) in another teams",
+                            usersInTeams.stream().collect(Collectors.joining(","))));
         }
         Team team = mappingRequestToTeam(teamRequest);
         log.debug("Started 'Save team '{}'", team);

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -69,12 +70,12 @@ public class TeamServiceTest {
     public void test_activateTeamIfUserExistsInAnotherTeamThrowsException() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
 
-        List<String> userInTeams = new ArrayList<>(Arrays.asList("user1","user4"));
-        when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(userInTeams);
+        List<String> usersInTeams = new ArrayList<>(Arrays.asList("user1","user4"));
+        when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(usersInTeams);
 
         expectedException.expect(UserAlreadyInTeamException.class);
-        expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams", userInTeams
-                .toString()));
+        expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams",
+                usersInTeams.stream().collect(Collectors.joining(","))));
 
         teamService.activateTeam(teamRequest);
         verify(teamRepository).getUserActiveTeams(anyString(), anyObject());

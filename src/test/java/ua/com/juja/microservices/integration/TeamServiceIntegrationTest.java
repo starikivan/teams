@@ -62,8 +62,7 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
 
         expectedException.expect(UserAlreadyInTeamException.class);
-        expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams", "[" + uuid +
-                "]"));
+        expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams", uuid));
 
         teamService.activateTeam(teamRequest);
     }

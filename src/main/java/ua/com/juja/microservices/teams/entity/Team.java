@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -23,7 +24,6 @@ import java.util.Set;
 @ToString
 @Slf4j
 public class Team {
-
     @Id
     private String id;
     @JsonProperty("members")
@@ -44,5 +44,9 @@ public class Team {
                 LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant());
         this.deactivateDate = Date.from(LocalDateTime.of(LocalDate.now().plusMonths(1).minusDays(1),
                 LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public Set<String> getMembers() {
+        return Collections.unmodifiableSet(members);
     }
 }
