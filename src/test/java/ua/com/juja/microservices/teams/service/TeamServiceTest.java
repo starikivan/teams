@@ -22,8 +22,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anySetOf;
@@ -136,14 +137,13 @@ public class TeamServiceTest {
     public void test_getAllTeamsExecutedCorrectly() {
         final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
         final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
-        final List<Team> teams = Arrays.asList(team1, team2);
+        final List<Team> expected = Arrays.asList(team1, team2);
 
-        when(teamRepository.getAllActiveTeams(anyObject())).thenReturn(teams);
+        when(teamRepository.getAllActiveTeams(anyObject())).thenReturn(expected);
 
-        Team[] actual = teamService.getAllActiveTeams();
+        List<Team> actual = teamService.getAllActiveTeams();
 
-        assertArrayEquals(teams.toArray(new Team[teams.size()]), actual);
-
+        assertThat(actual,is(expected));
         verify(teamRepository).getAllActiveTeams(anyObject());
         verifyNoMoreInteractions(teamRepository);
     }

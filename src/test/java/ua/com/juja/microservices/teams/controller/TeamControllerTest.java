@@ -201,8 +201,8 @@ public class TeamControllerTest {
     public void test_getAllActiveTeamsGoodResponse() throws Exception {
         final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
         final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
-        final Team[] teams = {team1, team2};
-        String expected = "[" + Arrays.stream(teams).map(Utils::convertToJSON)
+        final List<Team> teams = Arrays.asList(team1, team2);
+        String expected = "[" + teams.stream().map(Utils::convertToJSON)
                 .collect(Collectors.joining(",")) + "]";
         when(teamService.getAllActiveTeams()).thenReturn(teams);
         String result = getGoodResult(teamsFullGetAllTeamsUrl, HttpMethod.GET);

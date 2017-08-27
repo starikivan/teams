@@ -16,6 +16,7 @@ import ua.com.juja.microservices.teams.service.TeamService;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Ivan Shapovalov
@@ -50,9 +51,9 @@ public class TeamController {
     @GetMapping(value = "${teams.endpoint.getAllTeams}", produces = "application/json")
     public ResponseEntity<?> getAllActiveTeams() {
         log.debug("Received 'Get all teams' request");
-        Team[] teams = teamService.getAllActiveTeams();
-        log.info("Teams content received. Teams number: {}", teams.length);
-        log.debug("Request 'Get all teams' returned teams {}", Arrays.toString(teams));
+        List<Team> teams = teamService.getAllActiveTeams();
+        log.info("Teams content received. Teams number: {}", teams.size());
+        log.debug("Request 'Get all teams' returned teams {}", teams);
         return ResponseEntity.ok(teams);
     }
 
