@@ -83,6 +83,19 @@ public class TeamRepository {
         }
     }
 
+    public List<Team> getAllActiveTeams(Date actualDate) {
+        log.debug("Started 'Get all active teams' from DB at date '{}'", actualDate);
+        List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(actualDate)
+                .and("activateDate").lte(actualDate)), Team.class, mongoCollectionName);
+        if (teams == null) {
+            log.debug("Finished 'Get all active teams' from DB at date '{}'. Teams is empty", actualDate);
+            return new ArrayList<>();
+        } else {
+            log.debug("Finished 'Get all active teams' from DB at date '{}'. Teams <{}>", actualDate, teams);
+            return teams;
+        }
+    }
+
     public Team saveTeam(Team team) {
         log.debug("Started 'Save team' '{}' into DB ", team.toString());
         mongoTemplate.save(team, mongoCollectionName);

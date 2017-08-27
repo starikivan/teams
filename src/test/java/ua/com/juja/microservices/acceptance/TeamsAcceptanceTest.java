@@ -30,16 +30,20 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     private String teamsDeactivateTeamUrl;
     @Value("${teams.endpoint.getTeam}")
     private String teamsGetTeamUrl;
+    @Value("${teams.endpoint.getAllTeams}")
+    private String teamsGetAllTeamsUrl;
 
     private String teamsFullActivateTeamUrl;
     private String teamsFullDeactivateTeamUrl;
     private String teamsFullGetTeamUrl;
+    private String teamsFullGetAllTeamsUrl;
 
     @Before
     public void localSetup() {
-        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion+teamsBaseUrl+teamsActivateTeamUrl;
+        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsActivateTeamUrl;
         teamsFullDeactivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsDeactivateTeamUrl + "/";
         teamsFullGetTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetTeamUrl + "/";
+        teamsFullGetAllTeamsUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetAllTeamsUrl + "/";
     }
 
     @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
@@ -176,5 +180,21 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         String result = actualResponse.asString();
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
+    }
+
+    @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    @Test
+    public void test_getAllTeamExecutedCorrectly() throws IOException {
+        String url = teamsFullGetAllTeamsUrl;
+        Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
+
+        String result = actualResponse.asString();
+        String jsonContentExpectedResponse = String.format(Utils.convertToString(
+                resource("acceptance/response/responseGetAllTeamsExecutedCorrectly.json")),
+                "", "");
+        printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
+        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER)
+                .when(Option.IGNORING_EXTRA_FIELDS)
+                .isEqualTo(jsonContentExpectedResponse);
     }
 }

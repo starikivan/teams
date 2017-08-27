@@ -157,4 +157,20 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         assertEquals(actual.size(), 0);
         assertThat(actual, is(expected));
     }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
+    public void test_getAllActiveTeamsIfMongoTemplateReturnsNotNullTeamExecutedCorrectly() {
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
+        final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
+        final List<Team> expected = Arrays.asList(team1, team2);
+
+        List<Team> actual = teamRepository.getAllActiveTeams(actualDate);
+
+        assertEquals(2, actual.size());
+        for (int i = 0; i < actual.size(); i++) {
+            assertThat(actual.get(i).getMembers(), is(expected.get(i).getMembers()));
+        }
+    }
 }
