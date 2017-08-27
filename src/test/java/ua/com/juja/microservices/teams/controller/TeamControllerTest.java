@@ -22,6 +22,7 @@ import ua.com.juja.microservices.teams.service.TeamService;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,6 +59,8 @@ public class TeamControllerTest {
     private String teamsDeactivateTeamUrl;
     @Value("${teams.endpoint.getTeam}")
     private String teamsGetTeamUrl;
+    @Value("${teams.endpoint.getAllTeams}")
+    private String teamsGetAllTeamsUrl;
 
     @Inject
     private MockMvc mockMvc;
@@ -68,12 +71,14 @@ public class TeamControllerTest {
     private String teamsFullActivateTeamUrl;
     private String teamsFullDeactivateTeamUrl;
     private String teamsFullGetTeamUrl;
+    private String teamsFullGetAllTeamsUrl;
 
     @Before
     public void setup() {
-        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion+teamsBaseUrl+teamsActivateTeamUrl;
+        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsActivateTeamUrl;
         teamsFullDeactivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsDeactivateTeamUrl + "/";
         teamsFullGetTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetTeamUrl + "/";
+        teamsFullGetAllTeamsUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetAllTeamsUrl + "/";
     }
 
     @Test
@@ -183,11 +188,28 @@ public class TeamControllerTest {
         final String uuid = "user-in-several-teams";
 
         when(teamService.deactivateTeam(uuid))
-                .thenThrow(new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid)));
+                .thenThrow(new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams " +
+                        "now", uuid)));
 
         verifyNoMoreInteractions(teamService);
         String actualResponse = getBadResult(teamsFullDeactivateTeamUrl + uuid, HttpMethod.PUT);
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
+
+    }
+
+    @Test
+    public void test_getAllActiveTeamsGoodResponse() throws Exception {
+        final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
+        final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
+        final Team[] teams = {team1, team2};
+        String expected = "[" + Arrays.stream(teams).map(Utils::convertToJSON)
+                .collect(Collectors.joining(",")) + "]";
+        when(teamService.getAllActiveTeams()).thenReturn(teams);
+        String result = getGoodResult(teamsFullGetAllTeamsUrl, HttpMethod.GET);
+
+        verify(teamService).getAllActiveTeams();
+        verifyNoMoreInteractions(teamService);
+        assertEquals(expected, result);
 
     }
 

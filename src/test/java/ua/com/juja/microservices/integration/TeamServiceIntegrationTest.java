@@ -25,7 +25,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Ivan Shapovalov
@@ -117,5 +119,22 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
         actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsAfter.size());
+    }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
+    public void test_getAllTeamsExecutedCorrectly() {
+        final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
+        final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
+        final List<Team> expected = Arrays.asList(team1, team2);
+
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
+        List<Team> actual = teamRepository.getAllActiveTeams(actualDate);
+
+        assertEquals(2, actual.size());
+        for (int i = 0; i < actual.size(); i++) {
+            assertThat(actual.get(i).getMembers(), is(expected.get(i).getMembers()));
+        }
     }
 }

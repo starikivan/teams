@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
@@ -70,7 +71,7 @@ public class TeamServiceTest {
     public void test_activateTeamIfUserExistsInAnotherTeamThrowsException() {
         TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
 
-        List<String> usersInTeams = new ArrayList<>(Arrays.asList("user1","user4"));
+        List<String> usersInTeams = new ArrayList<>(Arrays.asList("user1", "user4"));
         when(teamRepository.checkUsersActiveTeams(anySetOf(String.class), anyObject())).thenReturn(usersInTeams);
 
         expectedException.expect(UserAlreadyInTeamException.class);
@@ -128,6 +129,22 @@ public class TeamServiceTest {
 
         verify(teamRepository).getUserActiveTeams(anyString(), anyObject());
         verify(teamRepository).saveTeam(team);
+        verifyNoMoreInteractions(teamRepository);
+    }
+
+    @Test
+    public void test_getAllTeamsExecutedCorrectly() {
+        final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
+        final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
+        final List<Team> teams = Arrays.asList(team1, team2);
+
+        when(teamRepository.getAllActiveTeams(anyObject())).thenReturn(teams);
+
+        Team[] actual = teamService.getAllActiveTeams();
+
+        assertArrayEquals(teams.toArray(new Team[teams.size()]), actual);
+
+        verify(teamRepository).getAllActiveTeams(anyObject());
         verifyNoMoreInteractions(teamRepository);
     }
 }

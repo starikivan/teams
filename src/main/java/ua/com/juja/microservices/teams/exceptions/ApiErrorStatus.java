@@ -4,13 +4,13 @@ public enum ApiErrorStatus {
 
     USER_NOT_IN_TEAM_EXCEPTION(
             "TMF-F2-D2",
-            "You cannot get/deactivate team if user not in team",
+            "You cannot get/deactivate team if the user not a member of any team!",
             "The reason of the exception is that user not in team"
     ),
 
     USER_IN_SEVERAL_TEAMS_EXCEPTION(
             "TMF-F2-D2",
-            "You cannot get/deactivate team if user in several teams",
+            "You cannot get/deactivate team if user in several teams!",
             "The reason of the exception is that user in several teams"
     ),
     TEAMS_EXCEPTION(
@@ -26,7 +26,7 @@ public enum ApiErrorStatus {
 
     USERS_ALREADY_IN_TEAM_EXCEPTION(
             "TMF-F1-D3",
-            "Sorry, but the user already exists in team",
+            "Sorry, but the user already exists in team!",
             "Exception - UserAlreadyInTeamException"
     ),
 

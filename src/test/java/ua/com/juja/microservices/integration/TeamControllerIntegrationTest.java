@@ -14,6 +14,7 @@ import ua.com.juja.microservices.Utils;
 
 import static net.javacrumbs.jsonunit.core.util.ResourceUtils.resource;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,17 +37,21 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     private String teamsActivateTeamUrl;
     @Value("${teams.endpoint.deactivateTeam}")
     private String teamsDeactivateTeamUrl;
+    @Value("${teams.endpoint.getAllTeams}")
+    private String teamsGetAllTeamsUrl;
 
     private String teamsFullDeactivateTeamUrl;
     private String teamsFullActivateTeamUrl;
+    private String teamsFullGetAllTeamsUrl;
 
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        teamsFullActivateTeamUrl = "/" +teamsRestApiVersion+ teamsBaseUrl+teamsActivateTeamUrl;
+        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsActivateTeamUrl;
         teamsFullDeactivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsDeactivateTeamUrl + "/";
+        teamsFullGetAllTeamsUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetAllTeamsUrl + "/";
     }
 
     @Test
@@ -87,5 +92,14 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
         mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
+    public void getAllTeamsExecutedCorrectly() throws Exception {
+        mockMvc.perform(get(teamsFullGetAllTeamsUrl)
+                .contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
     }
 }

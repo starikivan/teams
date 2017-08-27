@@ -79,4 +79,13 @@ public class TeamService {
             throw new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams now", uuid));
         }
     }
+
+    public Team[] getAllActiveTeams() {
+        log.debug("Started 'getAllActiveTeams'");
+        Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        List<Team> teams = teamRepository.getAllActiveTeams(actualDate);
+        log.debug("Finished 'getAllActiveTeams'. Teams '{}'", teams);
+        log.info("Finished 'getAllActiveTeams'. Teams size '{}'", teams.size());
+        return teams.toArray(new Team[teams.size()]);
+    }
 }
