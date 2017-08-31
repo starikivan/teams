@@ -1,8 +1,8 @@
 {
   "members": [
-    "user1",
-    "user-in-one-team",
-    "user2",
-    "user-in-several-teams"
+    "uuid1",
+    "uuid-in-one-team",
+    "uuid2",
+    "uuid-in-several-teams"
   ]
 }

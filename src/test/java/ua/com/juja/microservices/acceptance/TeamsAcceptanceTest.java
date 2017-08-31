@@ -48,7 +48,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
     @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
+    public void activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
         String url = teamsFullActivateTeamUrl;
         String jsonContentRequest = Utils.convertToString(resource
                 ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
@@ -60,13 +60,15 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
                 resource("acceptance/response/responseActivateTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS)
+        assertThatJson(result)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .when(Option.IGNORING_EXTRA_FIELDS)
                 .isEqualTo(jsonContentExpectedResponse);
     }
 
     @UsingDataSet(locations = "/datasets/activateTeamIfUsersInAnotherActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_activateTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
+    public void activateTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
 
         String url = teamsFullActivateTeamUrl;
         String jsonContentRequest = Utils
@@ -77,14 +79,15 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
 
         String result = actualResponse.asString();
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentControlResponse);
+        assertThatJson(result)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(jsonContentControlResponse);
     }
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_deactivateTeamIfUserInTeamExecutedCorrectly() throws IOException {
-
-        String uuid = "user-in-one-team";
+    public void deactivateTeamIfUserInTeamExecutedCorrectly() throws IOException {
+        String uuid = "uuid-in-one-team";
         String url = teamsFullDeactivateTeamUrl + uuid;
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
@@ -101,48 +104,50 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_deactivateTeamIfUserNotInTeamThrowsException() throws IOException {
-
-        String uuid = "user-not-in-team";
+    public void deactivateTeamIfUserNotInTeamThrowsException() throws IOException {
+        String uuid = "uuid-not-in-team";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
-
         String url = teamsFullDeactivateTeamUrl + uuid;
+
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         String result = actualResponse.asString();
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
+        assertThatJson(result)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(jsonContentExpectedResponse);
     }
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_deactivateTeamIfUserInSeveralTeamsThrowsException() throws IOException {
-
-        String uuid = "user-in-several-teams";
+    public void deactivateTeamIfUserInSeveralTeamsThrowsException() throws IOException {
+        String uuid = "uuid-in-several-teams";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
-
         String url = teamsFullDeactivateTeamUrl + uuid;
+
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         String result = actualResponse.asString();
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
+        assertThatJson(result)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(jsonContentExpectedResponse);
     }
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_getTeamIfUserInTeamExecutedCorrectly() throws IOException {
-
-        String uuid = "user-in-one-team";
+    public void getTeamIfUserInTeamExecutedCorrectly() throws IOException {
+        String uuid = "uuid-in-one-team";
         String url = teamsFullGetTeamUrl + uuid;
-        Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
-
-        String result = actualResponse.asString();
         String jsonContentExpectedResponse = String.format(Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInTeamExecutedCorrectly.json")),
                 "", "");
+
+        Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
+
+        String result = actualResponse.asString();
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
 
         assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER)
@@ -152,34 +157,36 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_getTeamIfUserInSeveralTeamsThrowsException() throws IOException {
-
-        String uuid = "user-in-several-teams";
+    public void getTeamIfUserInSeveralTeamsThrowsException() throws IOException {
+        String uuid = "uuid-in-several-teams";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
-
         String url = teamsFullGetTeamUrl + uuid;
+
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         String result = actualResponse.asString();
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
+        assertThatJson(result)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(jsonContentExpectedResponse);
     }
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
     public void test_getTeamIfUserNotInTeamThrowsException() throws IOException {
-
-        String uuid = "user-not-in-team";
+        String uuid = "uuid-not-in-team";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
-
         String url = teamsFullGetTeamUrl + uuid;
+
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
         printConsoleReport(url, jsonContentExpectedResponse, actualResponse.body());
         String result = actualResponse.asString();
-        assertThatJson(result).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
+        assertThatJson(result)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(jsonContentExpectedResponse);
     }
 
     @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)

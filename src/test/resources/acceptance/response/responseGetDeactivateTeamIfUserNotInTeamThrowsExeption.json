@@ -3,6 +3,6 @@
   "internalErrorCode": "TMF-F2-D2",
   "clientMessage": "You cannot get/deactivate team if the user not a member of any team!",
   "developerMessage": "The reason of the exception is that user not in team",
-  "exceptionMessage": "User with uuid 'user-not-in-team' not in team now",
+  "exceptionMessage": "User with uuid 'uuid-not-in-team' not in team now",
   "detailErrors": []
 }

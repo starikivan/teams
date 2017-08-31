@@ -13,7 +13,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
 
-
 @SpringBootTest(classes = {TeamsTestConfig.class, Teams.class})
 public class BaseIntegrationTest {
 

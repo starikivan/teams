@@ -15,7 +15,6 @@ import ua.com.juja.microservices.teams.service.TeamService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,14 +36,15 @@ public class TeamController {
         log.info("New team activated. Id {}", team.getId());
         log.debug("New team activated. Team {}", team.toString());
         return ResponseEntity.ok(team);
+
     }
 
     @PutMapping(value = "${teams.endpoint.deactivateTeam}" + "/{uuid}", produces = "application/json")
     public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
         log.debug("Received 'Deactivate team' request. Deactivate team of user {}", uuid);
         Team team = teamService.deactivateTeam(uuid);
-        log.info("Team deacticated. Team Id: {}", team.getId());
         log.debug("Request 'Deactivate team' returned team {}", team);
+        log.info("Team deacticated. Team Id: {}", team.getId());
         return ResponseEntity.ok(team);
     }
 
@@ -52,8 +52,8 @@ public class TeamController {
     public ResponseEntity<?> getAllActiveTeams() {
         log.debug("Received 'Get all teams' request");
         List<Team> teams = teamService.getAllActiveTeams();
-        log.info("Teams content received. Teams number: {}", teams.size());
         log.debug("Request 'Get all teams' returned teams {}", teams);
+        log.info("Teams content received. Teams number: {}", teams.size());
         return ResponseEntity.ok(teams);
     }
 
@@ -61,8 +61,8 @@ public class TeamController {
     public ResponseEntity<?> getTeamByUuid(@PathVariable String uuid) {
         log.debug("Received 'Get team' request. Get team of user {}", uuid);
         Team team = teamService.getUserActiveTeam(uuid);
-        log.info("Team content received. Team Id: {}", team.getId());
         log.debug("Request 'Get team' returned team {}", team);
+        log.info("Team content received. Team Id: {}", team.getId());
         return ResponseEntity.ok(team);
     }
 }
