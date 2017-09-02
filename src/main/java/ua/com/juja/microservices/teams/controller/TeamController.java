@@ -36,7 +36,6 @@ public class TeamController {
         log.info("New team activated. Id {}", team.getId());
         log.debug("New team activated. Team {}", team.toString());
         return ResponseEntity.ok(team);
-
     }
 
     @PutMapping(value = "${teams.endpoint.deactivateTeam}" + "/{uuid}", produces = "application/json")

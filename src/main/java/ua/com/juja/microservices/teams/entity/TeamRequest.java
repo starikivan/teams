@@ -27,8 +27,6 @@ public class TeamRequest {
 
     @Override
     public String toString() {
-        return "TeamRequest{" +
-                "members=" + members +
-                '}';
+        return "TeamRequest{members=" + members + "}";
     }
 }
