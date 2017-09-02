@@ -40,8 +40,8 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @Value("${teams.endpoint.getAllTeams}")
     private String teamsGetAllTeamsUrl;
 
-    private String teamsFullDeactivateTeamUrl;
     private String teamsFullActivateTeamUrl;
+    private String teamsFullDeactivateTeamUrl;
     private String teamsFullGetAllTeamsUrl;
 
     private MockMvc mockMvc;
@@ -56,7 +56,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json")
-    public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws Exception {
+    public void activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws Exception {
         String jsonContentRequest = Utils.convertToString((resource
                 ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json")));
 
@@ -69,8 +69,8 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_deactivateTeamIfUserInTeamExecutedCorrectly() throws Exception {
-        final String uuid = "user-in-one-team";
+    public void deactivateTeamIfUserInTeamExecutedCorrectly() throws Exception {
+        final String uuid = "uuid-in-one-team";
         mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
@@ -78,8 +78,8 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_deactivateTeamIfUserNotInTeamExecutedCorrectly() throws Exception {
-        final String uuid = "user-not-in-team";
+    public void deactivateTeamIfUserNotInTeamExecutedCorrectly() throws Exception {
+        final String uuid = "uuid-not-in-team";
         mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
@@ -87,8 +87,8 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_deactivateTeamIfUserInSeveralTeamsExecutedCorrectly() throws Exception {
-        final String uuid = "user-in-several-teams";
+    public void deactivateTeamIfUserInSeveralTeamsExecutedCorrectly() throws Exception {
+        final String uuid = "uuid-in-several-teams";
         mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());

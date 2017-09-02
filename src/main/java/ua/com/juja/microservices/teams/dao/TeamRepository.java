@@ -41,9 +41,8 @@ public class TeamRepository {
     public List<Team> getUserActiveTeams(String uuid, Date actualDate) {
         log.debug("Started 'Get user teams' '{}' from DB at date '{}'", uuid, actualDate);
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(actualDate)
-                .and("members").is(uuid).and("activateDate").lte(actualDate)
-        ), Team.class, mongoCollectionName);
-
+                        .and("members").is(uuid).and("activateDate").lte(actualDate)),
+                Team.class, mongoCollectionName);
         if (teams == null) {
             log.debug("Finished 'Get user '{}' teams from DB at date '{}'. Teams is empty", uuid, actualDate);
             return new ArrayList<>();
@@ -55,7 +54,6 @@ public class TeamRepository {
 
     public List<String> checkUsersActiveTeams(Set<String> members, Date actualDate) {
         log.debug("Started 'checkUsersActiveTeams' '{}' from DB at date '{}'", members.toArray(), actualDate);
-
         Aggregation agg = newAggregation(
                 match(Criteria.where("deactivateDate").gt(actualDate).and("activateDate").lte(actualDate)
                         .and("members").in(members)),

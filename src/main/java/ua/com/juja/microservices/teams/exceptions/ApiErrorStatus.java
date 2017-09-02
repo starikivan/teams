@@ -27,7 +27,7 @@ public enum ApiErrorStatus {
     USERS_ALREADY_IN_TEAM_EXCEPTION(
             "TMF-F1-D3",
             "Sorry, but the user already exists in team!",
-            "Exception - UserAlreadyInTeamException"
+            "The reason of the exception is that user already in team"
     ),
 
     OTHER_EXCEPTION(

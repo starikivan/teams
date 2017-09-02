@@ -47,11 +47,12 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json",
             loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_activateTeamIfUserNotInActiveTeamExecutedCorrectly() {
-        TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-user", "", "", "")));
+    public void activateTeamIfUserNotInActiveTeamExecutedCorrectly() {
+        TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("new-uuid", "uuid100", "uuid200", "uuid300")));
         Team expected = new Team(teamRequest.getMembers());
 
         Team actual = teamService.activateTeam(teamRequest);
+
         expected.setId(actual.getId());
         assertThatJson(actual).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(expected);
     }
@@ -59,9 +60,9 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/activateTeamIfUsersInAnotherActiveTeam.json",
             loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_activateTeamIfUserInAnotherTeamsThrowsExeption() {
-        String uuid = "user-in-team";
-        TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "", "", "")));
+    public void activateTeamIfUserInAnotherTeamsThrowsExeption() {
+        String uuid = "uuid-in-team";
+        TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList(uuid, "uuid100", "uuid200", "uuid300")));
 
         expectedException.expect(UserAlreadyInTeamException.class);
         expectedException.expectMessage(String.format("User(s) '#%s#' exist(s) in another teams", uuid));
@@ -70,10 +71,22 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    @UsingDataSet(locations = "/datasets/activateTeamIfUsersInAnotherActiveTeam.json",
+            loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
+    public void activateTeamIfUserNumberNotFourThrowsExeption() {
+        TeamRequest teamRequest = new TeamRequest(new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3")));
+
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Team Request must contain '4' members");
+
+        teamService.activateTeam(teamRequest);
+    }
+
+    @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_getTeamIfUserInTeamExecutedCorrectly() {
+    public void getTeamIfUserInTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String uuid = "user-in-one-team";
+        final String uuid = "uuid-in-one-team";
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
 
@@ -83,39 +96,45 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_getTeamIfUserNotInTeamExecutedCorrectly() {
+    public void getTeamIfUserNotInTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String uuid = "user-not-in-team";
+        final String uuid = "uuid-not-in-team";
+
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
+
         assertEquals(0, teamsBefore.size());
         expectedException.expect(UserNotInTeamException.class);
         expectedException.expectMessage(String.format("User with uuid '%s' not in team now", uuid));
+
         teamService.getUserActiveTeam(uuid);
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_getTeamIfUserInSeveralTeamsExecutedCorrectly() {
+    public void getTeamIfUserInSeveralTeamsExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String uuid = "user-in-several-teams";
+        final String uuid = "uuid-in-several-teams";
 
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
-        assertEquals(2, teamsBefore.size());
 
+        assertEquals(2, teamsBefore.size());
         expectedException.expect(UserInSeveralTeamsException.class);
         expectedException.expectMessage(String.format("User with uuid '%s' is in several teams now", uuid));
+
         teamService.getUserActiveTeam(uuid);
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_deactivateTeamIfUserInTeamExecutedCorrectly() {
+    public void deactivateTeamIfUserInTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String uuid = "user-in-one-team";
+        final String uuid = "uuid-in-one-team";
+
         List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(1, teamsBefore.size());
 
         teamService.deactivateTeam(uuid);
+
         actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuid, actualDate);
         assertEquals(0, teamsAfter.size());
@@ -124,8 +143,8 @@ public class TeamServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
     public void test_getAllTeamsExecutedCorrectly() {
-        final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
-        final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
+        final Team team1 = new Team(new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3", "uuid4")));
+        final Team team2 = new Team(new HashSet<>(Arrays.asList("uuid5", "uuid6", "uuid7", "uuid8")));
         final List<Team> expected = Arrays.asList(team1, team2);
 
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());

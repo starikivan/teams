@@ -62,16 +62,6 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
                         .build();
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(UserNotKeeperException.class)
-    public ResponseEntity<ApiErrorMessage> handleKeepersException(UserNotKeeperException ex) {
-        ApiErrorMessage message =
-                ApiErrorMessage.builder(ApiErrorStatus.USER_NOT_KEEPER_EXCEPTION)
-                        .httpStatus(HttpStatus.BAD_REQUEST.value())
-                        .exceptionMessage(ex.getMessage())
-                        .build();
-        logger.warn("Handle UserNotKeeperException before out " + message);
-        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(UserAlreadyInTeamException.class)
     public ResponseEntity<ApiErrorMessage> handleKeepersException(UserAlreadyInTeamException ex) {

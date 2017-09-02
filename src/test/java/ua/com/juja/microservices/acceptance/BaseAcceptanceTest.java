@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ua.com.juja.microservices.teams.Teams;
 
-import java.io.IOException;
-
 import static com.lordofthejars.nosqlunit.mongodb.MongoDbConfigurationBuilder.mongoDb;
 import static io.restassured.RestAssured.given;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -44,7 +42,7 @@ public class BaseAcceptanceTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    void printConsoleReport(String url, String expectedResponse, ResponseBody actualResponse) throws IOException {
+    void printConsoleReport(String url, String expectedResponse, ResponseBody actualResponse) {
 
         System.out.println("\n\n URL  - " + url);
 

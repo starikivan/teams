@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -35,11 +36,11 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     private TeamRepository teamRepository;
 
     @Test
-    public void test_saveTeamExecutedCorrectly() {
-        final String userInOneTeam = "user-in-one-team";
-        final String userInSeveralTeams = "user-in-several-teams";
+    public void saveTeamExecutedCorrectly() {
+        final String uuidInOneTeam = "uuid-in-one-team";
+        final String uuidInSeveralTeams = "uuid-in-several-teams";
         final Team expected =
-                new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
+                new Team(new HashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
 
         Team actual = teamRepository.saveTeam(expected);
 
@@ -49,36 +50,36 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_getUserTeamsUserInOneTeamExecutedCorrectly() {
+    public void getUserTeamsUserInOneTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userInOneTeam = "user-in-one-team";
-        final String userInSeveralTeams = "user-in-several-teams";
+        final String uuidInOneTeam = "uuid-in-one-team";
+        final String uuidInSeveralTeams = "uuid-in-several-teams";
         final Team expected =
-                new Team(new HashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
+                new Team(new HashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
 
-        List<Team> actual = teamRepository.getUserActiveTeams(userInOneTeam, actualDate);
+        List<Team> actual = teamRepository.getUserActiveTeams(uuidInOneTeam, actualDate);
 
-        assertEquals(actual.size(), 1);
+        assertEquals(1, actual.size());
         assertThat(actual.get(0).getMembers(), is(expected.getMembers()));
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_getUserTeamsIfUserInSeveralTeamsExecutedCorrectly() {
+    public void getUserTeamsIfUserInSeveralTeamsExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userInOneTeam = "user-in-one-team";
-        final String userInSeveralTeams = "user-in-several-teams";
+        final String uuidInOneTeam = "uuid-in-one-team";
+        final String uuidInSeveralTeams = "uuid-in-several-teams";
         final Team team1 =
-                new Team(new LinkedHashSet<>(Arrays.asList(userInOneTeam, "user1", "user2", userInSeveralTeams)));
+                new Team(new LinkedHashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
         final Team team2 =
-                new Team(new LinkedHashSet<>(Arrays.asList(userInSeveralTeams, "user3", "user4", "user5")));
+                new Team(new LinkedHashSet<>(Arrays.asList(uuidInSeveralTeams, "uuid3", "uuid4", "uuid5")));
         final List<Team> expected = new ArrayList<>();
         expected.add(team1);
         expected.add(team2);
 
-        List<Team> actual = teamRepository.getUserActiveTeams(userInSeveralTeams, actualDate);
+        List<Team> actual = teamRepository.getUserActiveTeams(uuidInSeveralTeams, actualDate);
 
-        assertEquals(actual.size(), expected.size());
+        assertEquals(expected.size(), actual.size());
         for (int i = 0; i < actual.size(); i++) {
             assertThat(actual.get(i).getMembers(), is(expected.get(i).getMembers()));
         }
@@ -86,84 +87,82 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_getUserTeamsIfUserNotInTeamExecutedCorrectly() {
+    public void getUserTeamsIfUserNotInTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userNotInTeam = "user-not-in-team";
-        final List<Team> expected = new ArrayList<>();
+        final String uuidNotInTeam = "uuid-not-in-team";
 
-        List<Team> actual = teamRepository.getUserActiveTeams(userNotInTeam, actualDate);
+        List<Team> actual = teamRepository.getUserActiveTeams(uuidNotInTeam, actualDate);
 
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(new ArrayList<>(), actual);
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_getUserTeamsIfUserInDeactivatedTeamsExecutedCorrectly() {
+    public void getUserTeamsIfUserInDeactivatedTeamsExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userInDeactivatedTeam = "user-in-deactivated-team";
-        final List<Team> expected = new ArrayList<>();
+        final String uuidInDeactivatedTeam = "uuid-in-deactivated-team";
 
-        List<Team> actual = teamRepository.getUserActiveTeams(userInDeactivatedTeam, actualDate);
+        List<Team> actual = teamRepository.getUserActiveTeams(uuidInDeactivatedTeam, actualDate);
 
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(new ArrayList<>(), actual);
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
-    public void test_deactivateTeamExecutedCorrectly() {
+    public void deactivateTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userInOneTeam = "user-in-one-team";
-        List<Team> teamsBefore = teamRepository.getUserActiveTeams(userInOneTeam, actualDate);
+        final String uuidInOneTeam = "uuid-in-one-team";
+        List<Team> teamsBefore = teamRepository.getUserActiveTeams(uuidInOneTeam, actualDate);
         assertEquals(1, teamsBefore.size());
         teamsBefore.get(0).setDeactivateDate(actualDate);
-
         Date newDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+
         teamRepository.saveTeam(teamsBefore.get(0));
-        List<Team> teamsAfter = teamRepository.getUserActiveTeams(userInOneTeam, newDate);
+        List<Team> teamsAfter = teamRepository.getUserActiveTeams(uuidInOneTeam, newDate);
 
         assertEquals(0, teamsAfter.size());
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_checkUsersActiveTeamsSomeUserInSeveralTeamsExecutedCorrectly() {
+    public void checkUsersActiveTeamsSomeUserInSeveralTeamsExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userInOneTeam = "user-in-one-team";
-        final String userInSeveralTeams = "user-in-several-teams";
+        final String uuidInOneTeam = "uuid-in-one-team";
+        final String uuidInSeveralTeams = "uuid-in-several-teams";
         Set<String> members = new HashSet<>();
-        members.add(userInOneTeam);
-        members.add(userInSeveralTeams);
+        members.add(uuidInOneTeam);
+        members.add(uuidInSeveralTeams);
         final List<String> expected = new ArrayList<>();
-        expected.add(userInOneTeam);
-        expected.add(userInSeveralTeams);
+        expected.add(uuidInOneTeam);
+        expected.add(uuidInSeveralTeams);
 
         List<String> actual = teamRepository.checkUsersActiveTeams(members, actualDate);
 
-        assertEquals(actual.size(), 2);
+        assertEquals(2, actual.size());
         assertThat(actual, is(expected));
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
-    public void test_checkUsersActiveTeamsNoOneInSeveralTeamsReturnsEmptyList() {
+    public void checkUsersActiveTeamsNoOneInSeveralTeamsReturnsEmptyList() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final String userNotOneTeam = "user-not-in-team";
+        final String uuidNotOneTeam = "uuid-not-in-team";
         Set<String> members = new HashSet<>();
-        members.add(userNotOneTeam);
+        members.add(uuidNotOneTeam);
         final List<String> expected = new ArrayList<>();
 
         List<String> actual = teamRepository.checkUsersActiveTeams(members, actualDate);
 
-        assertEquals(actual.size(), 0);
+        assertEquals(0, actual.size());
         assertThat(actual, is(expected));
     }
 
     @Test
     @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
-    public void test_getAllActiveTeamsIfMongoTemplateReturnsNotNullTeamExecutedCorrectly() {
+    public void getAllActiveTeamsIfMongoTemplateReturnsNotNullTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final Team team1 = new Team(new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4")));
-        final Team team2 = new Team(new HashSet<>(Arrays.asList("user5", "user6", "user7", "user8")));
+        final Team team1 = new Team(new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3", "uuid4")));
+        final Team team2 = new Team(new HashSet<>(Arrays.asList("uuid5", "uuid6", "uuid7", "uuid8")));
         final List<Team> expected = Arrays.asList(team1, team2);
 
         List<Team> actual = teamRepository.getAllActiveTeams(actualDate);

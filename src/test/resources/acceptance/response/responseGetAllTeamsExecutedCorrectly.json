@@ -1,20 +1,20 @@
 [
   {
     "members": [
-      "user1",
-      "user3",
-      "user2",
-      "user4"
+      "uuid1",
+      "uuid3",
+      "uuid2",
+      "uuid4"
     ],
     "activateDate": "2017-04-01T00:00:00+0000",
     "deactivateDate": "2099-10-31T23:59:59+0000"
   },
   {
     "members": [
-      "user6",
-      "user5",
-      "user8",
-      "user7"
+      "uuid6",
+      "uuid5",
+      "uuid8",
+      "uuid7"
     ],
     "activateDate": "2017-04-01T00:00:00+0000",
     "deactivateDate": "2099-10-30T23:59:59+0000"
