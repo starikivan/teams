@@ -5,7 +5,6 @@ import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
 import io.restassured.response.Response;
 import net.javacrumbs.jsonunit.core.Option;
 import org.eclipse.jetty.http.HttpMethod;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +18,6 @@ import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 
 @RunWith(SpringRunner.class)
 public class TeamsAcceptanceTest extends BaseAcceptanceTest {
-
-    @Value("${teams.rest.api.version}")
-    private String teamsRestApiVersion;
-    @Value("${teams.baseURL}")
-    private String teamsBaseUrl;
     @Value("${teams.endpoint.activateTeam}")
     private String teamsActivateTeamUrl;
     @Value("${teams.endpoint.deactivateTeam}")
@@ -33,23 +27,10 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     @Value("${teams.endpoint.getAllTeams}")
     private String teamsGetAllTeamsUrl;
 
-    private String teamsFullActivateTeamUrl;
-    private String teamsFullDeactivateTeamUrl;
-    private String teamsFullGetTeamUrl;
-    private String teamsFullGetAllTeamsUrl;
-
-    @Before
-    public void localSetup() {
-        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsActivateTeamUrl;
-        teamsFullDeactivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsDeactivateTeamUrl + "/";
-        teamsFullGetTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetTeamUrl + "/";
-        teamsFullGetAllTeamsUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetAllTeamsUrl + "/";
-    }
-
     @UsingDataSet(locations = "/datasets/activateTeamIfUserNotInActiveTeam.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
     public void activateTeamIfUserNotInActiveTeamExecutedCorrectly() throws IOException {
-        String url = teamsFullActivateTeamUrl;
+        String url = teamsActivateTeamUrl;
         String jsonContentRequest = Utils.convertToString(resource
                 ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         Response actualResponse = getRealResponse(url, jsonContentRequest, HttpMethod.POST);
@@ -70,7 +51,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     @Test
     public void activateTeamIfUserInAnotherActiveTeamExecutedCorrectly() throws IOException {
 
-        String url = teamsFullActivateTeamUrl;
+        String url = teamsActivateTeamUrl;
         String jsonContentRequest = Utils
                 .convertToString(resource("acceptance/request/requestActivateTeamIfUsersInActiveTeamThrowsExceptions.json"));
         String jsonContentControlResponse = Utils.convertToString(
@@ -88,7 +69,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     @Test
     public void deactivateTeamIfUserInTeamExecutedCorrectly() throws IOException {
         String uuid = "uuid-in-one-team";
-        String url = teamsFullDeactivateTeamUrl + uuid;
+        String url = teamsDeactivateTeamUrl + "/" + uuid;
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
         String result = actualResponse.asString();
@@ -108,7 +89,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         String uuid = "uuid-not-in-team";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
-        String url = teamsFullDeactivateTeamUrl + uuid;
+        String url = teamsDeactivateTeamUrl + "/" + uuid;
 
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
@@ -125,7 +106,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         String uuid = "uuid-in-several-teams";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
-        String url = teamsFullDeactivateTeamUrl + uuid;
+        String url = teamsDeactivateTeamUrl + "/" + uuid;
 
         Response actualResponse = getRealResponse(url, "", HttpMethod.PUT);
 
@@ -140,7 +121,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
     @Test
     public void getTeamIfUserInTeamExecutedCorrectly() throws IOException {
         String uuid = "uuid-in-one-team";
-        String url = teamsFullGetTeamUrl + uuid;
+        String url = teamsGetTeamUrl + "/" + uuid;
         String jsonContentExpectedResponse = String.format(Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInTeamExecutedCorrectly.json")),
                 "", "");
@@ -161,7 +142,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
         String uuid = "uuid-in-several-teams";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
-        String url = teamsFullGetTeamUrl + uuid;
+        String url = teamsGetTeamUrl + "/" + uuid;
 
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
@@ -174,11 +155,11 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_getTeamIfUserNotInTeamThrowsException() throws IOException {
+    public void getTeamIfUserNotInTeamThrowsException() throws IOException {
         String uuid = "uuid-not-in-team";
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
-        String url = teamsFullGetTeamUrl + uuid;
+        String url = teamsGetTeamUrl + "/" + uuid;
 
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
@@ -191,8 +172,8 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
 
     @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json", loadStrategy = LoadStrategyEnum.CLEAN_INSERT)
     @Test
-    public void test_getAllTeamExecutedCorrectly() throws IOException {
-        String url = teamsFullGetAllTeamsUrl;
+    public void getAllTeamExecutedCorrectly() throws IOException {
+        String url = teamsGetAllTeamsUrl;
         Response actualResponse = getRealResponse(url, "", HttpMethod.GET);
 
         String result = actualResponse.asString();

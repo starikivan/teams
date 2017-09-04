@@ -26,13 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 public class TeamControllerIntegrationTest extends BaseIntegrationTest {
-
     @Rule
     public final ExpectedException exception = ExpectedException.none();
-    @Value("${teams.rest.api.version}")
-    private String teamsRestApiVersion;
-    @Value("${teams.baseURL}")
-    private String teamsBaseUrl;
     @Value("${teams.endpoint.activateTeam}")
     private String teamsActivateTeamUrl;
     @Value("${teams.endpoint.deactivateTeam}")
@@ -40,18 +35,11 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @Value("${teams.endpoint.getAllTeams}")
     private String teamsGetAllTeamsUrl;
 
-    private String teamsFullActivateTeamUrl;
-    private String teamsFullDeactivateTeamUrl;
-    private String teamsFullGetAllTeamsUrl;
-
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        teamsFullActivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsActivateTeamUrl;
-        teamsFullDeactivateTeamUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsDeactivateTeamUrl + "/";
-        teamsFullGetAllTeamsUrl = "/" + teamsRestApiVersion + teamsBaseUrl + teamsGetAllTeamsUrl + "/";
     }
 
     @Test
@@ -60,7 +48,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
         String jsonContentRequest = Utils.convertToString((resource
                 ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json")));
 
-        mockMvc.perform(post(teamsFullActivateTeamUrl)
+        mockMvc.perform(post(teamsActivateTeamUrl)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(jsonContentRequest))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -71,7 +59,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void deactivateTeamIfUserInTeamExecutedCorrectly() throws Exception {
         final String uuid = "uuid-in-one-team";
-        mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
+        mockMvc.perform(put(teamsDeactivateTeamUrl + "/" + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
@@ -80,7 +68,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void deactivateTeamIfUserNotInTeamExecutedCorrectly() throws Exception {
         final String uuid = "uuid-not-in-team";
-        mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
+        mockMvc.perform(put(teamsDeactivateTeamUrl + "/" + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
     }
@@ -89,7 +77,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/getAndDeactivateDataSet.json")
     public void deactivateTeamIfUserInSeveralTeamsExecutedCorrectly() throws Exception {
         final String uuid = "uuid-in-several-teams";
-        mockMvc.perform(put(teamsFullDeactivateTeamUrl + uuid))
+        mockMvc.perform(put(teamsDeactivateTeamUrl + "/" + uuid))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
     }
@@ -97,7 +85,7 @@ public class TeamControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
     public void getAllTeamsExecutedCorrectly() throws Exception {
-        mockMvc.perform(get(teamsFullGetAllTeamsUrl)
+        mockMvc.perform(get(teamsGetAllTeamsUrl)
                 .contentType(APPLICATION_JSON_UTF8))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
