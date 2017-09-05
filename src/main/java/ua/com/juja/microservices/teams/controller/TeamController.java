@@ -22,7 +22,6 @@ import java.util.List;
  * @author Andrii Sidun
  */
 @RestController
-@RequestMapping(value = "/" + "${teams.rest.api.version}" + "${teams.baseURL}")
 @Slf4j
 public class TeamController {
 
