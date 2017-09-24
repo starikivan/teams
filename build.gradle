@@ -5,15 +5,21 @@ buildscript {
     }
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE'
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
     }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'docker'
 
-group = 'ua.com.juja'
-version = '1.0-SNAPSHOT'
+group = 'juja'
 
 idea {
     module {
@@ -21,6 +27,7 @@ idea {
         downloadSources = true
     }
 }
+
 jar {
     baseName = "teams"
     version = "0.1.0"
@@ -30,13 +37,25 @@ description = "teams"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
+import org.gradle.internal.os.OperatingSystem
+
+task buildDocker(type: Docker, dependsOn: build) {
+    if(OperatingSystem.current().isLinux()){
+        dockerBinary = "sudo docker"
+    }
+    applicationName = jar.baseName
+    dockerfile = file('docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into "${stageDir}/target"
+        }
+    }
 }
 
 test.testLogging {
@@ -53,6 +72,7 @@ test {
         println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
     }
 }
+
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: 'spring-boot-starter-tomcat'
