@@ -1,4 +1,4 @@
-package ua.com.juja.microservices.teams.dao;
+package ua.com.juja.microservices.teams.dao.impl;
 
 import com.lordofthejars.nosqlunit.annotation.UsingDataSet;
 import com.lordofthejars.nosqlunit.core.LoadStrategyEnum;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -40,7 +39,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final String uuidInOneTeam = "uuid-in-one-team";
         final String uuidInSeveralTeams = "uuid-in-several-teams";
         final Team expected =
-                new Team(new HashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
+                new Team("uuid-from",new HashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
 
         Team actual = teamRepository.saveTeam(expected);
 
@@ -55,7 +54,7 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final String uuidInOneTeam = "uuid-in-one-team";
         final String uuidInSeveralTeams = "uuid-in-several-teams";
         final Team expected =
-                new Team(new HashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
+                new Team("uuid-from",new HashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
 
         List<Team> actual = teamRepository.getUserActiveTeams(uuidInOneTeam, actualDate);
 
@@ -70,9 +69,9 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
         final String uuidInOneTeam = "uuid-in-one-team";
         final String uuidInSeveralTeams = "uuid-in-several-teams";
         final Team team1 =
-                new Team(new LinkedHashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
+                new Team("uuid-from",new LinkedHashSet<>(Arrays.asList(uuidInOneTeam, "uuid1", "uuid2", uuidInSeveralTeams)));
         final Team team2 =
-                new Team(new LinkedHashSet<>(Arrays.asList(uuidInSeveralTeams, "uuid3", "uuid4", "uuid5")));
+                new Team("uuid-from",new LinkedHashSet<>(Arrays.asList(uuidInSeveralTeams, "uuid3", "uuid4", "uuid5")));
         final List<Team> expected = new ArrayList<>();
         expected.add(team1);
         expected.add(team2);
@@ -161,8 +160,8 @@ public class TeamRepositoryTest extends BaseIntegrationTest {
     @UsingDataSet(locations = "/datasets/getAllActiveTeamsDataSet.json")
     public void getAllActiveTeamsIfMongoTemplateReturnsNotNullTeamExecutedCorrectly() {
         Date actualDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final Team team1 = new Team(new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3", "uuid4")));
-        final Team team2 = new Team(new HashSet<>(Arrays.asList("uuid5", "uuid6", "uuid7", "uuid8")));
+        final Team team1 = new Team("uuid-from",new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3", "uuid4")));
+        final Team team2 = new Team("uuid-from",new HashSet<>(Arrays.asList("uuid5", "uuid6", "uuid7", "uuid8")));
         final List<Team> expected = Arrays.asList(team1, team2);
 
         List<Team> actual = teamRepository.getAllActiveTeams(actualDate);
