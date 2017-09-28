@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.juja.microservices.teams.entity.Team;
-import ua.com.juja.microservices.teams.entity.TeamRequest;
+import ua.com.juja.microservices.teams.entity.impl.ActivateTeamRequest;
+import ua.com.juja.microservices.teams.entity.impl.DeactivateTeamRequest;
 import ua.com.juja.microservices.teams.service.TeamService;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping(value = "${teams.endpoint.activateTeam}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> activateTeam(@Valid @RequestBody TeamRequest request) {
+    public ResponseEntity<?> activateTeam(@Valid @RequestBody ActivateTeamRequest request) {
         log.debug("Received 'Activate team' request {}", request);
         Team team = teamService.activateTeam(request);
         log.info("New team activated. Id {}", team.getId());
@@ -37,10 +37,10 @@ public class TeamController {
         return ResponseEntity.ok(team);
     }
 
-    @PutMapping(value = "${teams.endpoint.deactivateTeam}" + "/{uuid}", produces = "application/json")
-    public ResponseEntity<?> deactivateTeam(@PathVariable String uuid) {
-        log.debug("Received 'Deactivate team' request. Deactivate team of user {}", uuid);
-        Team team = teamService.deactivateTeam(uuid);
+    @PutMapping(value = "${teams.endpoint.deactivateTeam}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> deactivateTeam(@Valid @RequestBody DeactivateTeamRequest request) {
+        log.debug("Received 'Deactivate team' request '{}'", request);
+        Team team = teamService.deactivateTeam(request);
         log.debug("Request 'Deactivate team' returned team {}", team);
         log.info("Team deacticated. Team Id: {}", team.getId());
         return ResponseEntity.ok(team);

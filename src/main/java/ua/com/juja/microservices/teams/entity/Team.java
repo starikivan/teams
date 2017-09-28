@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * @author Andrii.Sidun
+ * @author Andrii Sidun
  * @author Ivan Shapovalov
  */
 @Data
@@ -26,6 +26,10 @@ import java.util.Set;
 public class Team {
     @Id
     private String id;
+
+    @JsonProperty("from")
+    private String from;
+
     @JsonProperty("members")
     private Set<String> members;
 
@@ -38,7 +42,8 @@ public class Team {
     private Date deactivateDate;
 
     @JsonCreator
-    public Team(@JsonProperty("members") Set<String> members) {
+    public Team(@JsonProperty("from") String from, @JsonProperty("members") Set<String> members) {
+        this.from = from;
         this.members = members;
         this.activateDate = Date.from(LocalDateTime.of(LocalDate.now(),
                 LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant());
