@@ -66,8 +66,7 @@ public class TeamsAcceptanceTest extends BaseAcceptanceTest {
                 Collections.singletonList(teamsDirection));
         String jsonContentRequest = Utils.convertToString(resource
                 ("acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
-        Response actualResponse = getRealResponse(teamsActivateTeamUrl, jsonContentRequest, org.eclipse.jetty.http
-                .HttpMethod.POST);
+        Response actualResponse = getRealResponse(teamsActivateTeamUrl, jsonContentRequest, HttpMethod.POST);
         String result = actualResponse.asString();
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseActivateTeamIfUserNotInActiveTeamExecutedCorrectly.json"));
