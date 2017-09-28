@@ -1,12 +1,15 @@
 package ua.com.juja.microservices.teams.exceptions;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-class ApiErrorMessage {
+@AllArgsConstructor
+
+public class ApiErrorMessage {
     /**
      * The status is duplicate http httpStatus internalErrorCode
      */
@@ -32,11 +35,11 @@ class ApiErrorMessage {
      */
     private List<String> detailErrors;
 
-    static ApiErrorMessageBuilder builder(ApiErrorStatus apiStatus) {
+    public static ApiErrorMessageBuilder builder(ApiErrorStatus apiStatus) {
         return new ApiErrorMessageBuilder(apiStatus);
     }
 
-    private ApiErrorMessage(String code, String clientMessage, String developerMessage) {
+    ApiErrorMessage(String code, String clientMessage, String developerMessage) {
         this.httpStatus = 0;
         this.internalErrorCode = code;
         this.clientMessage = clientMessage;
@@ -49,7 +52,7 @@ class ApiErrorMessage {
         return exceptionMessage;
     }
 
-    static class ApiErrorMessageBuilder {
+    public static class ApiErrorMessageBuilder {
 
         private ApiErrorMessage instance;
 
@@ -61,27 +64,27 @@ class ApiErrorMessage {
             );
         }
 
-        ApiErrorMessageBuilder httpStatus(int status) {
+        public ApiErrorMessageBuilder httpStatus(int status) {
             instance.httpStatus = status;
             return this;
         }
 
-        ApiErrorMessageBuilder exceptionMessage(String exceptionMessage) {
+        public ApiErrorMessageBuilder exceptionMessage(String exceptionMessage) {
             instance.exceptionMessage = exceptionMessage;
             return this;
         }
 
-        ApiErrorMessageBuilder detailError(String detailError) {
+        public ApiErrorMessageBuilder detailError(String detailError) {
             instance.detailErrors.add(detailError);
             return this;
         }
 
-        ApiErrorMessageBuilder detailErrors(List<String> detailErrors) {
+        public ApiErrorMessageBuilder detailErrors(List<String> detailErrors) {
             instance.detailErrors.addAll(detailErrors);
             return this;
         }
 
-        ApiErrorMessage build() {
+        public ApiErrorMessage build() {
             return instance;
         }
     }
