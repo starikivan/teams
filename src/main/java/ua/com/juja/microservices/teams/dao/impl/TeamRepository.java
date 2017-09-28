@@ -1,4 +1,4 @@
-package ua.com.juja.microservices.teams.dao;
+package ua.com.juja.microservices.teams.dao.impl;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import ua.com.juja.microservices.teams.entity.Team;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -43,13 +42,8 @@ public class TeamRepository {
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(actualDate)
                         .and("members").is(uuid).and("activateDate").lte(actualDate)),
                 Team.class, mongoCollectionName);
-        if (teams == null) {
-            log.debug("Finished 'Get user '{}' teams from DB at date '{}'. Teams is empty", uuid, actualDate);
-            return new ArrayList<>();
-        } else {
-            log.debug("Finished 'Get user '{}' teams' from DB at date '{}'. Teams <{}>", uuid, actualDate, teams);
-            return teams;
-        }
+        log.debug("Finished 'Get user '{}' teams' from DB at date '{}'. Teams <{}>", uuid, actualDate, teams);
+        return teams;
     }
 
     public List<String> checkUsersActiveTeams(Set<String> members, Date actualDate) {
@@ -68,30 +62,21 @@ public class TeamRepository {
                 = mongoTemplate.aggregate(agg, mongoCollectionName, Member.class);
         List<Member> usersInActiveTeams = groupResults.getMappedResults();
 
-        if (usersInActiveTeams == null) {
-            log.debug("Finished 'checkUsersActiveTeams '{}' from DB at date '{}'. Teams is empty", members.toArray()
-                    , actualDate);
-            return new ArrayList<>();
-        } else {
-            List<String> users = usersInActiveTeams.stream().map(Member::getUuid).collect(Collectors.toList());
-            Collections.sort(users);
-            log.debug("Finished 'checkUsersActiveTeams '{}' teams' from DB at date '{}'. Users in active teams <{}>",
-                    members.toArray(), actualDate, users.toArray());
-            return users;
-        }
+        List<String> users = usersInActiveTeams.stream().map(Member::getUuid).collect(Collectors.toList());
+        Collections.sort(users);
+        log.debug("Finished 'checkUsersActiveTeams '{}' teams' from DB at date '{}'. Users in active teams <{}>",
+                members.toArray(), actualDate, users.toArray());
+        return users;
+
     }
 
     public List<Team> getAllActiveTeams(Date actualDate) {
         log.debug("Started 'Get all active teams' from DB at date '{}'", actualDate);
         List<Team> teams = mongoTemplate.find(new Query(Criteria.where("deactivateDate").gt(actualDate)
                 .and("activateDate").lte(actualDate)), Team.class, mongoCollectionName);
-        if (teams == null) {
-            log.debug("Finished 'Get all active teams' from DB at date '{}'. Teams is empty", actualDate);
-            return new ArrayList<>();
-        } else {
-            log.debug("Finished 'Get all active teams' from DB at date '{}'. Teams <{}>", actualDate, teams);
-            return teams;
-        }
+        log.debug("Finished 'Get all active teams' from DB at date '{}'. Teams <{}>", actualDate, teams);
+        return teams;
+
     }
 
     public Team saveTeam(Team team) {
