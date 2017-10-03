@@ -18,6 +18,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -49,7 +50,28 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
                         .httpStatus(HttpStatus.BAD_REQUEST.value())
                         .exceptionMessage(ex.getMessage())
                         .build();
-        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(KeeperExchangeException.class)
+    public ResponseEntity<ApiErrorMessage> handleKeeperExchangeException(
+            KeeperExchangeException ex) {
+        ApiErrorMessage message =
+                ApiErrorMessage.builder(ApiErrorStatus.USER_NOT_KEEPER_EXCEPTION)
+                        .httpStatus(HttpStatus.BAD_REQUEST.value())
+                        .exceptionMessage(ex.getMessage())
+                        .build();
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity handleResourceAccessException(ResourceAccessException ex) {
+        ApiErrorMessage message =
+                ApiErrorMessage.builder(ApiErrorStatus.OTHER_EXCEPTION)
+                        .httpStatus(HttpStatus.BAD_REQUEST.value())
+                        .exceptionMessage("Some service unavailable")
+                        .build();
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserInSeveralTeamsException.class)
@@ -60,7 +82,7 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
                         .httpStatus(HttpStatus.BAD_REQUEST.value())
                         .exceptionMessage(ex.getMessage())
                         .build();
-        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserAlreadyInTeamException.class)
@@ -71,7 +93,7 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
                         .exceptionMessage(ex.getMessage())
                         .build();
         logger.warn("Handle UserAlreadyInTeamException before out " + message);
-        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @Override

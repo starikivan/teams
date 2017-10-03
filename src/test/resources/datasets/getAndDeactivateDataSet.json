@@ -1,29 +1,37 @@
 {
   "teams": [
     {
+      "from":"uuid-from",
       "members": ["uuid-in-one-team","uuid1","uuid2","uuid-in-several-teams"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2099-08-31T23:59:59.000Z"}
     },
     {
+      "from":"uuid-from",
       "members":["uuid-in-several-teams","uuid3","uuid4","uuid5"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2099-08-30T23:59:59.000Z"}
     },
     {
+      "from":"uuid-from",
       "members":["uuid-in-several-teams","uuid-in-one-team","uuid7"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-05-30T23:59:59.000Z"}
     },
     {
+      "from":"uuid-from",
       "members":["uuid-in-deactivated-team","uuid8","uuid9","uuid10"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-04-30T23:59:59.000Z"}
-    },   {
+    },
+    {
+      "from":"uuid-from",
       "members":["uuid-in-deactivated-team","uuid7","uuid-in-one-team","uuid10"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-06-30T23:59:59.000Z"}
-    },  {
+    },
+    {
+      "from":"uuid-from",
       "members":["uuid-in-deactivated-team","uuid7","uuid-in-one-team","uuid-in-several-teams"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-04-15T23:59:59.000Z"}

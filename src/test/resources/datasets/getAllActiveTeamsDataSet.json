@@ -1,24 +1,31 @@
 {
   "teams": [
     {
+      "from":"uuid-from",
       "members": ["uuid1","uuid3","uuid2","uuid4"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2099-10-31T23:59:59.000Z"}
     },
     {
+      "from":"uuid-from",
       "members":["uuid6","uuid5","uuid8","uuid7"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2099-10-30T23:59:59.000Z"}
     },
     {
+      "from":"uuid-from",
       "members":["uuid-in-deactivated-team","uuid8","uuid9","uuid10"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-04-30T23:59:59.000Z"}
-    },   {
+    },
+    {
+      "from":"uuid-from",
       "members":["uuid-in-deactivated-team","uuid7","uuid-in-one-team","uuid10"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-06-30T23:59:59.000Z"}
-    },  {
+    },
+    {
+      "from":"uuid-from",
       "members":["uuid-in-deactivated-team","uuid7","uuid-in-one-team","uuid-in-several-teams"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2017-04-15T23:59:59.000Z"}

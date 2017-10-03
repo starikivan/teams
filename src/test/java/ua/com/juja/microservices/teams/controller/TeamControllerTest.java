@@ -13,7 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ua.com.juja.microservices.Utils;
 import ua.com.juja.microservices.teams.entity.Team;
-import ua.com.juja.microservices.teams.entity.TeamRequest;
+import ua.com.juja.microservices.teams.entity.impl.ActivateTeamRequest;
+import ua.com.juja.microservices.teams.entity.impl.DeactivateTeamRequest;
 import ua.com.juja.microservices.teams.exceptions.UserAlreadyInTeamException;
 import ua.com.juja.microservices.teams.exceptions.UserInSeveralTeamsException;
 import ua.com.juja.microservices.teams.exceptions.UserNotInTeamException;
@@ -33,6 +34,7 @@ import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -73,15 +75,15 @@ public class TeamControllerTest {
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseActivateTeamIfUserInActiveTeamThrowsException.json"));
         List<String> usersInTeams = new ArrayList<>(Arrays.asList("uuid-in-team", "uuid-in-team2"));
-        when(teamService.activateTeam(any(TeamRequest.class)))
+        when(teamService.activateTeam(any(ActivateTeamRequest.class)))
                 .thenThrow(new UserAlreadyInTeamException(
                         String.format("User(s) '#%s#' exist(s) in another teams",
                                 usersInTeams.stream().collect(Collectors.joining(",")))));
 
-        String actualResponse = getBadPostResult(teamsActivateTeamUrl, jsonContentRequest);
+        String actualResponse = getBadJsonResult(teamsActivateTeamUrl, HttpMethod.POST, jsonContentRequest);
 
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
-        verify(teamService).activateTeam(any(TeamRequest.class));
+        verify(teamService).activateTeam(any(ActivateTeamRequest.class));
         verifyNoMoreInteractions(teamService);
     }
 
@@ -90,12 +92,12 @@ public class TeamControllerTest {
         String jsonContentRequest = Utils.convertToString(resource(
                 "acceptance/request/requestActivateTeamIfUserNotInActiveTeamExecutedCorrecly.json"));
         final List<String> expectedUuids = Arrays.asList("uuid400", "uuid100", "uuid200", "uuid300");
-        final Team team = new Team(new LinkedHashSet<>(expectedUuids));
-        when(teamService.activateTeam(any(TeamRequest.class))).thenReturn(team);
+        final Team team = new Team("uuid-from", new LinkedHashSet<>(expectedUuids));
+        when(teamService.activateTeam(any(ActivateTeamRequest.class))).thenReturn(team);
 
-        String result = getGoodPostResult(teamsActivateTeamUrl, jsonContentRequest);
+        String result = getGoodJsonResult(teamsActivateTeamUrl, HttpMethod.POST, jsonContentRequest);
 
-        ArgumentCaptor<TeamRequest> captor = ArgumentCaptor.forClass(TeamRequest.class);
+        ArgumentCaptor<ActivateTeamRequest> captor = ArgumentCaptor.forClass(ActivateTeamRequest.class);
         verify(teamService).activateTeam(captor.capture());
         Set<String> actualUuids = captor.getValue().getMembers();
         assertThat("List equality without order",
@@ -106,14 +108,18 @@ public class TeamControllerTest {
 
     @Test
     public void deactivateTeamIfUserInTeamExecutedCorrectly() throws Exception {
-        final String uuid = "uuid-in-team";
+        String jsonContentRequest = Utils.convertToString(resource(
+                "acceptance/request/requestDeactivateTeamIfUserInTeamExecutedCorrectly.json"));
         final Team team =
-                new Team(new LinkedHashSet<>(Arrays.asList(uuid, "uuid1", "uuid2", "uuid-in-several-teams")));
-        when(teamService.deactivateTeam(uuid)).thenReturn(team);
+                new Team("uuid-from", new LinkedHashSet<>(Arrays.asList("uuid400", "uuid100", "uuid200", "uuid-in-one-team")));
+        when(teamService.deactivateTeam(any(DeactivateTeamRequest.class))).thenReturn(team);
 
-        String result = getGoodResult(teamsDeactivateTeamUrl + "/" + uuid, HttpMethod.PUT);
+        String result = getGoodJsonResult(teamsDeactivateTeamUrl, HttpMethod.PUT, jsonContentRequest);
 
-        verify(teamService).deactivateTeam(uuid);
+        ArgumentCaptor<DeactivateTeamRequest> captor = ArgumentCaptor.forClass(DeactivateTeamRequest.class);
+        verify(teamService).deactivateTeam(captor.capture());
+        assertTrue(captor.getValue().getFrom().equals("uuid-from"));
+        assertTrue(captor.getValue().getUuid().equals("uuid-in-one-team"));
         verifyNoMoreInteractions(teamService);
         assertEquals(Utils.convertToJSON(team), result);
     }
@@ -122,10 +128,10 @@ public class TeamControllerTest {
     public void getTeamByUuidIfUserInTeamExecutedCorrectly() throws Exception {
         final String uuid = "uuid-in-team";
         final Team team =
-                new Team(new LinkedHashSet<>(Arrays.asList(uuid, "uuid1", "uuid2", "uuid-in-several-teams")));
+                new Team("uuid-from", new LinkedHashSet<>(Arrays.asList(uuid, "uuid1", "uuid2", "uuid-in-several-teams")));
         when(teamService.getUserActiveTeam(uuid)).thenReturn(team);
 
-        String result = getGoodResult(teamsGetTeamUrl + "/" + uuid, HttpMethod.GET);
+        String result = getGoodResult(teamsGetTeamUrl + "/" + uuid);
 
         verify(teamService).getUserActiveTeam(uuid);
         verifyNoMoreInteractions(teamService);
@@ -140,7 +146,7 @@ public class TeamControllerTest {
         when(teamService.getUserActiveTeam(uuid)).thenThrow(new UserNotInTeamException(String.format("User with uuid " +
                 "'%s' not in team now", uuid)));
 
-        String actualResponse = getBadResult(teamsGetTeamUrl + "/" + uuid, HttpMethod.GET);
+        String actualResponse = getBadResult(teamsGetTeamUrl + "/" + uuid);
 
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
         verify(teamService).getUserActiveTeam(uuid);
@@ -149,56 +155,67 @@ public class TeamControllerTest {
 
     @Test
     public void deactivateTeamIfUserNotInTeamBadResponce() throws Exception {
+        String jsonContentRequest = Utils.convertToString(resource(
+                "acceptance/request/requestDeactivateTeamIfUserNotInTeamThrowsException.json"));
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserNotInTeamThrowsExeption.json"));
         final String uuid = "uuid-not-in-team";
-        when(teamService.deactivateTeam(uuid)).thenThrow(new UserNotInTeamException(String.format("User with uuid " +
-                "'%s' not in team now", uuid)));
+        when(teamService.deactivateTeam(any(DeactivateTeamRequest.class)))
+                .thenThrow(new UserNotInTeamException(String.format("User with uuid '%s' not in team now", uuid)));
 
-        String actualResponse = getBadResult(teamsDeactivateTeamUrl + "/" + uuid, HttpMethod.PUT);
+        String actualResponse = getBadJsonResult(teamsDeactivateTeamUrl, HttpMethod.PUT, jsonContentRequest);
 
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
-        verify(teamService).deactivateTeam(uuid);
+        ArgumentCaptor<DeactivateTeamRequest> captor = ArgumentCaptor.forClass(DeactivateTeamRequest.class);
+        verify(teamService).deactivateTeam(captor.capture());
+        assertTrue(captor.getValue().getFrom().equals("uuid-from"));
+        assertTrue(captor.getValue().getUuid().equals("uuid-not-in-team"));
         verifyNoMoreInteractions(teamService);
     }
 
     @Test
     public void deactivateTeamIfUserInSeveralTeamsBadResponce() throws Exception {
+        String jsonContentRequest = Utils.convertToString(resource(
+                "acceptance/request/requestDeactivateTeamIfUserInSeveralTeamsException.json"));
+
         String jsonContentExpectedResponse = Utils.convertToString(
                 resource("acceptance/response/responseGetDeactivateTeamIfUserInSeveralTeamsThrowsExceptions.json"));
         final String uuid = "uuid-in-several-teams";
-        when(teamService.deactivateTeam(uuid))
+        when(teamService.deactivateTeam(any(DeactivateTeamRequest.class)))
                 .thenThrow(new UserInSeveralTeamsException(String.format("User with uuid '%s' is in several teams " +
                         "now", uuid)));
 
-        String actualResponse = getBadResult(teamsDeactivateTeamUrl + "/" + uuid, HttpMethod.PUT);
+        String actualResponse = getBadJsonResult(teamsDeactivateTeamUrl, HttpMethod.PUT, jsonContentRequest);
 
         assertThatJson(actualResponse).when(Option.IGNORING_ARRAY_ORDER).isEqualTo(jsonContentExpectedResponse);
-        verify(teamService).deactivateTeam(uuid);
+        ArgumentCaptor<DeactivateTeamRequest> captor = ArgumentCaptor.forClass(DeactivateTeamRequest.class);
+        verify(teamService).deactivateTeam(captor.capture());
+        assertTrue(captor.getValue().getFrom().equals("uuid-from"));
+        assertTrue(captor.getValue().getUuid().equals("uuid-in-several-teams"));
         verifyNoMoreInteractions(teamService);
     }
 
     @Test
     public void getAllActiveTeamsGoodResponse() throws Exception {
-        final Team team1 = new Team(new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3", "uuid4")));
-        final Team team2 = new Team(new HashSet<>(Arrays.asList("uuid5", "uuid6", "uuid7", "uuid8")));
+        final Team team1 = new Team("uuid-from", new HashSet<>(Arrays.asList("uuid1", "uuid2", "uuid3", "uuid4")));
+        final Team team2 = new Team("uuid-from", new HashSet<>(Arrays.asList("uuid5", "uuid6", "uuid7", "uuid8")));
         final List<Team> teams = Arrays.asList(team1, team2);
         String expected = "[" + teams.stream().map(Utils::convertToJSON)
                 .collect(Collectors.joining(",")) + "]";
         when(teamService.getAllActiveTeams()).thenReturn(teams);
 
-        String result = getGoodResult(teamsGetAllTeamsUrl, HttpMethod.GET);
+        String result = getGoodResult(teamsGetAllTeamsUrl);
 
         verify(teamService).getAllActiveTeams();
         verifyNoMoreInteractions(teamService);
         assertEquals(expected, result);
     }
 
-    private String getGoodResult(String uri, HttpMethod method) throws Exception {
+    private String getGoodResult(String uri) throws Exception {
         MockHttpServletRequestBuilder builder;
-        if (HttpMethod.GET == method) {
+        if (HttpMethod.GET == HttpMethod.GET) {
             builder = get(uri);
-        } else if (HttpMethod.PUT == method) {
+        } else if (HttpMethod.PUT == HttpMethod.GET) {
             builder = put(uri);
         } else {
             throw new RuntimeException("Unsupported HttpMethod in getResponse()");
@@ -208,11 +225,11 @@ public class TeamControllerTest {
                 .andReturn().getResponse().getContentAsString();
     }
 
-    private String getBadResult(String uri, HttpMethod method) throws Exception {
+    private String getBadResult(String uri) throws Exception {
         MockHttpServletRequestBuilder builder;
-        if (HttpMethod.GET == method) {
+        if (HttpMethod.GET == HttpMethod.GET) {
             builder = get(uri);
-        } else if (HttpMethod.PUT == method) {
+        } else if (HttpMethod.PUT == HttpMethod.GET) {
             builder = put(uri);
         } else {
             throw new RuntimeException("Unsupported HttpMethod in getResponse()");
@@ -222,8 +239,16 @@ public class TeamControllerTest {
                 .andReturn().getResponse().getContentAsString();
     }
 
-    private String getGoodPostResult(String uri, String jsonContentRequest) throws Exception {
-        return mockMvc.perform(post(uri)
+    private String getGoodJsonResult(String uri, HttpMethod method, String jsonContentRequest) throws Exception {
+        MockHttpServletRequestBuilder builder;
+        if (HttpMethod.POST == method) {
+            builder = post(uri);
+        } else if (HttpMethod.PUT == method) {
+            builder = put(uri);
+        } else {
+            throw new RuntimeException("Unsupported HttpMethod in getResponse()");
+        }
+        return mockMvc.perform(builder
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(jsonContentRequest))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -231,8 +256,16 @@ public class TeamControllerTest {
                 .andReturn().getResponse().getContentAsString();
     }
 
-    private String getBadPostResult(String uri, String jsonContentRequest) throws Exception {
-        return mockMvc.perform(post(uri)
+    private String getBadJsonResult(String uri, HttpMethod method, String jsonContentRequest) throws Exception {
+        MockHttpServletRequestBuilder builder;
+        if (HttpMethod.POST == method) {
+            builder = post(uri);
+        } else if (HttpMethod.PUT == method) {
+            builder = put(uri);
+        } else {
+            throw new RuntimeException("Unsupported HttpMethod in getResponse()");
+        }
+        return mockMvc.perform(builder
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(jsonContentRequest))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))

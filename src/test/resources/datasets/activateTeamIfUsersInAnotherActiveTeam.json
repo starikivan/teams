@@ -1,6 +1,7 @@
 {
   "teams": [
     {
+      "from":"uuid-from",
       "members": ["uuid-in-team","uuid-in-team2","uuid2","uuid3"],
       "activateDate":{ "$date" : "2017-04-01T00:00:00.000Z"},
       "deactivateDate":{ "$date" : "2025-08-30T00:00:00.000Z"}
